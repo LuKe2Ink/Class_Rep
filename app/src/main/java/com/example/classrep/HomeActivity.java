@@ -1,9 +1,11 @@
 package com.example.classrep;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -39,6 +41,12 @@ public class HomeActivity extends AppCompatActivity {
         //db = AppDatabase.getInstance(HomeActivity.this.getBaseContext());
 
         provaRecycler();
+        recycle.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL) {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                // Do not draw the divider
+            }
+        });
     }
 
     private void provaRecycler(){
