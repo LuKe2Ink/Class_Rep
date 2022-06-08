@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.classrep.adapter.IstitutiAdapter;
+import com.example.classrep.database.Istitute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     private ListView listView;
     private List<String> lista;
 
-    private List<Istituto> listaIstituto = new ArrayList<>();
+    private List<Istitute> listIstitutes = new ArrayList<>();
     private IstitutiAdapter adapter;
     private RecyclerView recycle;
     //private AppDatabase db;
@@ -50,10 +50,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void provaRecycler(){
-        listaIstituto.add(new Istituto(1, "bruh1", "bruhone", ""));
-        listaIstituto.add(new Istituto(2, "bruh2", "bruhone", ""));
-        listaIstituto.add(new Istituto(3, "bruh3", "bruhone", ""));
-        adapter = new IstitutiAdapter(getApplicationContext(), listaIstituto);
+        listIstitutes.add(new Istitute(1, "bruh1", "bruhone", ""));
+        listIstitutes.add(new Istitute(2, "bruh2", "bruhone", ""));
+        listIstitutes.add(new Istitute(3, "bruh3", "bruhone", ""));
+        adapter = new IstitutiAdapter(getApplicationContext(), listIstitutes);
         recycle.setAdapter(adapter);
     }
 

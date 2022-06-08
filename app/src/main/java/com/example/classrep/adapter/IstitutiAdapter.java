@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.classrep.Istituto;
+import com.example.classrep.database.Istitute;
 import com.example.classrep.R;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IstitutiAdapter extends RecyclerView.Adapter<IstitutiAdapter.IstitutiViewHolder> {
-    private List<Istituto> istituti = new ArrayList<>();
+    private List<Istitute> istituti = new ArrayList<>();
     private Context context;
 
-    public IstitutiAdapter(Context context, List<Istituto> istituti) {
+    public IstitutiAdapter(Context context, List<Istitute> istituti) {
         this.context = context;
         this.istituti = istituti;
     }
@@ -56,10 +56,10 @@ public class IstitutiAdapter extends RecyclerView.Adapter<IstitutiAdapter.Istitu
             mContext = itemView.getContext();
         }
 
-        public void bindIstituto(Istituto istituto) {
+        public void bindIstituto(Istitute istitute) {
             //mNameTextView.setText(restaurant.getName());
-            classeTextView.setText(istituto.getClasse());
-            schoolTextView.setText(istituto.getIstituto());
+            classeTextView.setText(istitute.getClasse());
+            schoolTextView.setText(istitute.getIstituto());
         }
     }
 }

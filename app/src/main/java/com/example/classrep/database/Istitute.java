@@ -1,11 +1,11 @@
-package com.example.classrep;
+package com.example.classrep.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
-public class Istituto {
+@Entity(tableName = "istituto")
+public class Istitute {
 
     @PrimaryKey
     private int id;
@@ -19,10 +19,10 @@ public class Istituto {
     @ColumnInfo(name="istituto_image")
     private String image;
 
-    public Istituto() {
+    public Istitute() {
     }
 
-    public Istituto(int id, String istituto, String classe, String image) {
+    public Istitute(int id, String istituto, String classe, String image) {
         this.id = id;
         this.istituto = istituto;
         this.classe = classe;
