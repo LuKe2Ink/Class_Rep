@@ -1,33 +1,30 @@
 package com.example.classrep;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Canvas;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.classrep.adapter.IstitutiAdapter;
-import com.example.classrep.database.Istitute;
+import com.example.classrep.adapter.InstituteAdapter;
+import com.example.classrep.database.Institute;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements InstituteAdapter.onInstituteListener {
 
-    private ListView listView;
-    private List<String> lista;
-
-    private List<Istitute> listIstitutes = new ArrayList<>();
-    private IstitutiAdapter adapter;
+    private List<Institute> listInstitutes = new ArrayList<>();
+    private InstituteAdapter adapter;
     private RecyclerView recycle;
     //private AppDatabase db;
 
-    private String image;
-    private String istituto;
-    private String classe;
+    private FloatingActionButton add;
 
 
     @Override
@@ -38,23 +35,42 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         recycle = findViewById(R.id.istituti);
 
+        add = findViewById(R.id.addIstitute);
+
         //db = AppDatabase.getInstance(HomeActivity.this.getBaseContext());
 
-        provaRecycler();
-        recycle.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL) {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                // Do not draw the divider
-            }
+        createRecycler();
+
+        add.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AddInstituteActivity.class);
+            startActivity(intent);
         });
+
     }
 
-    private void provaRecycler(){
-        listIstitutes.add(new Istitute(1, "bruh1", "bruhone", ""));
-        listIstitutes.add(new Istitute(2, "bruh2", "bruhone", ""));
-        listIstitutes.add(new Istitute(3, "bruh3", "bruhone", ""));
-        adapter = new IstitutiAdapter(getApplicationContext(), listIstitutes);
-        recycle.setAdapter(adapter);
+    private void createRecycler(){
+        listInstitutes.add(new Institute(1, "bruh1", "bruhone", ""));
+        //listInstitutes.add(new Institute(2, "bruh2", "bruhone", ""));
+        //listInstitutes.add(new Institute(3, "bruh3", "bruhone", ""));
+
+        if(listInstitutes.isEmpty()){
+            TextView empty = findViewById(R.id.empty);
+            if (empty.getVisibility() != View.VISIBLE) {
+                empty.setVisibility(View.VISIBLE);
+            } else {
+                empty.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            adapter = new InstituteAdapter(getApplicationContext(), listInstitutes, this);
+            recycle.setAdapter(adapter);
+        }
     }
 
+    @Override
+    public void onInstituteClick(int position) {
+        Institute item = listInstitutes.get(position);
+        Toast.makeText(getBaseContext(), item.toString(), Toast.LENGTH_SHORT).show();
+        /*Intent intent = new Intent(this, AddInstituteActivity.class);
+        startActivity(intent);*/
+    }
 }

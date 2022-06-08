@@ -11,9 +11,9 @@ import java.util.List;
 public interface ClassRepDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertIstituti(Istitute ...institute);
+    void insertIstituti(Institute...institute);
 
 
-    @Query("SELECT * FROM Istitute")
-    List<Istitute> getAllIstituti();
+    @Query("SELECT * FROM institute")
+    List<Institute> getAllIstituti();
 }
