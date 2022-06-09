@@ -6,10 +6,22 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.classrep.database.entity.Adhesion;
+import com.example.classrep.database.entity.Child;
+import com.example.classrep.database.entity.Event;
+import com.example.classrep.database.entity.Fund;
+import com.example.classrep.database.entity.FundChronology;
+import com.example.classrep.database.entity.Institute;
+import com.example.classrep.database.entity.Meeting;
+import com.example.classrep.database.entity.PTAmeeting;
+import com.example.classrep.database.entity.Parent;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Institute.class}, version = 1, exportSchema = false)
+@Database(entities =
+            {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class}
+             , version = 3, exportSchema = false)
 public abstract class ClassRepDB extends RoomDatabase {
 
     public abstract ClassRepDAO ClassRepDAO();
@@ -25,6 +37,7 @@ public abstract class ClassRepDB extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             ClassRepDB.class, "ClassRep_database")
+                            .fallbackToDestructiveMigration()
                             .build();
 
                 }

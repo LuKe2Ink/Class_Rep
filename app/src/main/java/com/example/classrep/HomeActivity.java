@@ -1,20 +1,18 @@
 package com.example.classrep;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.content.AsyncTaskLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.classrep.adapter.InstituteAdapter;
 import com.example.classrep.database.ClassRepDB;
-import com.example.classrep.database.Institute;
+import com.example.classrep.database.entity.Institute;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,7 +21,6 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements InstituteAdapter.onInstituteListener {
 
-    private Institute prova;
     private List<Institute> listInstitutes = new ArrayList<>();
     private InstituteAdapter adapter;
     private RecyclerView recycle;
@@ -36,7 +33,7 @@ public class HomeActivity extends AppCompatActivity implements InstituteAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        listInstitutes.add(new Institute(1, "bruh1", "bruhone", ""));
+        //listInstitutes.add(new Institute(1, "bruh1", "bruhone", ""));
 
         db = ClassRepDB.getDatabase(HomeActivity.this);
 
@@ -46,17 +43,19 @@ public class HomeActivity extends AppCompatActivity implements InstituteAdapter.
         add = findViewById(R.id.addIstitute);
 
         AsyncTask.execute(()->{
-            //db.ClassRepDAO().insertIstituti(new Institute(1, "bruh", "bruh1", ""));
-            prova = db.ClassRepDAO().getInstitute(1);
+            listInstitutes = db.ClassRepDAO().getAllInstitute();
         });
 
         createRecycler();
 
         add.setOnClickListener(view -> {
-            /*Intent intent = new Intent(this, AddInstituteActivity.class);
-            startActivity(intent);*/
-            Toast.makeText(getBaseContext(), prova.getIstituto(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AddInstituteActivity.class);
+            startActivity(intent);
+            //Toast.makeText(getBaseContext(), prova.getInstitute(), Toast.LENGTH_SHORT).show();
         });
+
+        SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
+        Toast.makeText(getBaseContext(), String.valueOf(singleToneClass.getData("institute")), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -80,9 +79,9 @@ public class HomeActivity extends AppCompatActivity implements InstituteAdapter.
         Institute item = listInstitutes.get(position);
 
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
-        singleToneClass.setData(item.getId());
+        singleToneClass.setData("institute",item.getId_institute());
 
-        Intent intent = new Intent(this, AddInstituteActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(this, AddInstituteActivity.class);
+        startActivity(intent);*/
     }
 }

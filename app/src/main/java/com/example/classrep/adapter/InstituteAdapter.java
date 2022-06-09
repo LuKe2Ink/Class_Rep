@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.classrep.database.Institute;
+import com.example.classrep.database.entity.Institute;
 import com.example.classrep.R;
 
 import java.util.ArrayList;
@@ -67,8 +67,8 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
 
         public void bindInstitute(Institute institute) {
             //mNameTextView.setText(restaurant.getName());
-            gradeTextView.setText(institute.getClasse());
-            schoolTextView.setText(institute.getIstituto());
+            gradeTextView.setText(institute.getGrade());
+            schoolTextView.setText(institute.getInstitute());
         }
 
         @Override
