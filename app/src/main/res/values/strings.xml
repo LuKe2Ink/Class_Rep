@@ -3,4 +3,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fab_content_desc">add an institute</string>
+    <string name="calendar">calendario</string>
+    <string name="fund">fondo cassa</string>
+    <string name="pta">colloqui</string>
+    <string name="eventi">eventi</string>
+    <string name="riunioni">riunioni</string>
+    <string name="trash">trashcan</string>
+    <string name="deselectAll">deselect all</string>
+    <string name="selectAll">select all</string>
 </resources>

@@ -25,7 +25,7 @@
             app:layout_constraintHorizontal_bias="0.65"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/grade"
@@ -57,16 +57,16 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileIcon"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:drawingCacheQuality="high"
+            android:layout_width="84dp"
+            android:layout_height="76dp"
             android:src="@drawable/splashscreen"
+            app:civ_border_width="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.07"
+            app:layout_constraintHorizontal_bias="0.095"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -33,12 +33,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    implementation ("com.itextpdf:itextpdf:5.5.13.1")
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation "android.arch.persistence.room:runtime:1.0.0"
     implementation 'com.google.firebase:firebase-database:19.7.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.compose.ui:ui-text:1.0.0-beta04'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 
     implementation 'com.jakewharton:butterknife:10.2.3'

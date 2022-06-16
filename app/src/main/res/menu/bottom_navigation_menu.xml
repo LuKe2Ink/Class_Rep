@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/event"
+            android:enabled="true"
+            android:icon="@drawable/ic_event"
+            android:title="@string/eventi"/>
+        <item
+            android:id="@+id/pta"
+            android:enabled="true"
+            android:icon="@drawable/ic_pta"
+            android:title="@string/pta"/>
+        <item
+            android:id="@+id/calendar"
+            android:enabled="true"
+            android:icon="@drawable/ic_baseline_calendar_today_24"
+            android:title="@string/calendar"/>
+        <item
+            android:id="@+id/fund"
+            android:enabled="true"
+            android:icon="@drawable/ic_baseline_euro_24"
+            android:title="@string/fund"/>
+        <item
+            android:id="@+id/meeting"
+            android:enabled="true"
+            android:icon="@drawable/ic_meeting"
+            android:title="@string/riunioni"/>
+</menu>

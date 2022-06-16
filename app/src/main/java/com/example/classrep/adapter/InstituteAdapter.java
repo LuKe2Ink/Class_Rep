@@ -66,7 +66,6 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
         }
 
         public void bindInstitute(Institute institute) {
-            //mNameTextView.setText(restaurant.getName());
             gradeTextView.setText(institute.getGrade());
             schoolTextView.setText(institute.getInstitute());
         }

@@ -16,10 +16,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
-
         new Handler().postDelayed(() -> {
-            Intent homeActivity = new Intent(MainActivity.this, HomeActivity.class);
+            Intent homeActivity = new Intent(MainActivity.this, SelectionActivity.class);
             startActivity(homeActivity);
             finish();
         }, DELAY_TO_HOME);

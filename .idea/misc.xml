@@ -5,17 +5,29 @@
       <map>
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/drawable/border.xml" value="0.22135416666666666" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.3828125" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/drawable/ic_baseline_photo_camera_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22135416666666666" />
-        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_institute.xml" value="0.20520833333333333" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_institute.xml" value="0.33" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_istitute.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_home.xml" value="0.3048973143759874" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_selection.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/adapter_home_layout.xml" value="0.5" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/content_utente.xml" value="0.33" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_add_istitute.xml" value="0.33" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_calendar.xml" value="0.3546195652173913" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_event.xml" value="0.3446557971014493" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_fund.xml" value="0.3546195652173913" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_meeting.xml" value="0.3446557971014493" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_p_t_a.xml" value="0.3446557971014493" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/selection_toolbar.xml" value="0.20520833333333333" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/bottom_navigatio_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/selection_appbar.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22135416666666666" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/xml/provider_paths.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>
