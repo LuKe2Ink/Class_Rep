@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -37,7 +38,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -48,15 +53,17 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
     private InstituteAdapter adapter;
     private RecyclerView recycle;
     private MaterialToolbar topAppbar;
+    private FloatingActionButton add;
 
     private ClassRepDB db;
-
-    private FloatingActionButton add;
 
     private int pageHeight = 1120;
     private int pagewidth = 792;
 
     Bitmap bmp, scaledbmp;
+
+    private boolean trash = false;
+    List<Integer> removeInstitute = new ArrayList<>();
 
     private static final int PERMISSION_REQUEST_CODE = 200;
 
@@ -87,12 +94,27 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
         });
 
         add.setOnClickListener(view -> {
-            //daterrima = riunione.get(0).getDate();
-            //Calendar calendario = Calendar.getInstance();
-            //calendario.setTime(daterrima);
-            Intent intent = new Intent(this, AddInstituteActivity.class);
-            startActivity(intent);
-            //Toast.makeText(getBaseContext(), calendario.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ITALY), Toast.LENGTH_SHORT).show();
+            if (trash){
+                if(!removeInstitute.isEmpty()){
+                    Predicate<Institute> contain = x -> (removeInstitute.contains(x.getId_institute()));
+                    listInstitutes.removeIf(contain);
+                    System.out.println(listInstitutes);
+                    openOrCloseTrashcan(false, topAppbar.getMenu().findItem(R.id.trash), View.INVISIBLE);
+
+                    AsyncTask.execute(()->{
+                        db.ClassRepDAO().deleteInstitute(removeInstitute);
+                        removeInstitute.clear();
+                    });
+                    adapter.notifyDataSetChanged();
+                }
+            } else {
+                Intent intent = new Intent(this, AddInstituteActivity.class);
+                startActivity(intent);
+            }
+//          daterrima = riunione.get(0).getDate();
+//          Calendar calendario = Calendar.getInstance();
+//          calendario.setTime(daterrima);
+//          Toast.makeText(getBaseContext(), calendario.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ITALY), Toast.LENGTH_SHORT).show();
 //             AsyncTask.execute(()->{
 //                 db.ClassRepDAO().insertInstitute(new Institute(1, "bruh", "bruh1", "", Date.from(Calendar.getInstance().toInstant())));
 //             });
@@ -106,23 +128,30 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 //            pdfIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            pdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //            startActivity(pdfIntent);
-
-            System.out.println(listInstitutes.isEmpty());
         });
 
         topAppbar.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()){
                 case R.id.trash:
-                    MenuItem deselectAll = topAppbar.getMenu().findItem(R.id.deselectAll);
-                    deselectAll.setVisible(true);
-                    MenuItem selectAll = topAppbar.getMenu().findItem(R.id.selectAll);
-                    selectAll.setVisible(true);
-
-                    add.setImageResource(R.drawable.ic_open_trashcan);
+                    if(trash){
+                        openOrCloseTrashcan(false, menuItem, View.INVISIBLE);
+                    } else {
+                        openOrCloseTrashcan(true, menuItem, View.VISIBLE);
+                    }
                     break;
                 case R.id.deselectAll:
+                    for (int i=0; i<listInstitutes.size(); i++){
+                        RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
+                        CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                        check.setChecked(false);
+                    }
                     break;
                 case R.id.selectAll:
+                    for (int i=0; i<listInstitutes.size(); i++){
+                        RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
+                        CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                        check.setChecked(true);
+                    }
                     break;
             }
             return false;
@@ -145,13 +174,44 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 
     @Override
     public void onInstituteClick(int position) {
-        Institute item = listInstitutes.get(position);
+        if(trash){
+            int id = listInstitutes.get(position).getId_institute();
+            RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(position);
+            CheckBox check = view.itemView.findViewById(R.id.checkBox);
+            if (!removeInstitute.contains(id)) {
+                removeInstitute.add(id);
+                check.setChecked(true);
+            } else {
+                removeInstitute.remove(removeInstitute.indexOf(id));
+                check.setChecked(false);
+            }
+            System.out.println(removeInstitute);
+        } else {
+            Institute item = listInstitutes.get(position);
 
-        SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
-        singleToneClass.setData("institute",item.getId_institute());
+            SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
+            singleToneClass.setData("institute",item.getId_institute());
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void openOrCloseTrashcan(boolean boo, MenuItem item, int visible){
+        trash = boo;
+        item.setIcon(boo ? R.drawable.ic_baseline_close_24 : R.drawable.ic_closed_trashcan);
+        MenuItem deselectAll = topAppbar.getMenu().findItem(R.id.deselectAll);
+        deselectAll.setVisible(boo);
+        MenuItem selectAll = topAppbar.getMenu().findItem(R.id.selectAll);
+        selectAll.setVisible(boo);
+
+        for (int i=0; i<listInstitutes.size(); i++){
+            RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
+            CheckBox check = view.itemView.findViewById(R.id.checkBox);
+            check.setVisibility(visible);
+        }
+
+        add.setImageResource(boo ? R.drawable.ic_open_trashcan : R.drawable.ic_baseline_add_24 );
     }
 
     //PER LA CREAZIONE DEL PDF

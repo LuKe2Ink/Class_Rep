@@ -33,8 +33,6 @@ public class AddInstituteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_institute);
 
-        getSupportActionBar().setTitle("Creazione di una nuova classe");
-
         add = findViewById(R.id.insertInstitute);
 
         db = ClassRepDB.getDatabase(AddInstituteActivity.this);

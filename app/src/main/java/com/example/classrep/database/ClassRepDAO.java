@@ -34,7 +34,7 @@ public interface ClassRepDAO {
     Institute getInstitute(int id);
 
     @Query("DELETE FROM institute WHERE id_institute in (:id)")
-    void deleteInstitute(int[] id);
+    void deleteInstitute(List<Integer> id);
 
     @Query("SELECT MAX(id_institute) FROM institute")
     int getMaxIdInstitute();

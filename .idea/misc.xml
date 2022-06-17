@@ -14,13 +14,17 @@
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_selection.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/adapter_home_layout.xml" value="0.5" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/calendar_default.xml" value="0.20520833333333333" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/calendar_pta.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/content_utente.xml" value="0.33" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/event_calendar.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_add_istitute.xml" value="0.33" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_calendar.xml" value="0.3546195652173913" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_event.xml" value="0.3446557971014493" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_fund.xml" value="0.3546195652173913" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_meeting.xml" value="0.3446557971014493" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/fragment_p_t_a.xml" value="0.3446557971014493" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/meeting_calendar.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/selection_toolbar.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/bottom_navigatio_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
