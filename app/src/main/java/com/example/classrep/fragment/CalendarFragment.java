@@ -1,5 +1,6 @@
 package com.example.classrep.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,23 +11,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.classrep.R;
+import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Event;
 
 import org.naishadhparmar.zcustomcalendar.CustomCalendar;
 import org.naishadhparmar.zcustomcalendar.OnNavigationButtonClickedListener;
 import org.naishadhparmar.zcustomcalendar.Property;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CalendarFragment extends Fragment implements OnNavigationButtonClickedListener {
-    CustomCalendar customCalendar;
+    private CustomCalendar customCalendar;
+    private ClassRepDB db;
+
+    private List<Event> events;
+    Calendar calendar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         customCalendar=view.findViewById(R.id.custom_calendar);
+        db = ClassRepDB.getDatabase(getContext());
 
         // Initialize description hashmap
         HashMap<Object, Property> descHashMap=new HashMap<>();
@@ -68,20 +78,29 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
         HashMap<Integer,Object> dateHashmap=new HashMap<>();
 
         // initialize calendar
-        Calendar calendar=  Calendar.getInstance();
-        // Put values
-        dateHashmap.put(calendar.get(Calendar.DAY_OF_MONTH),"current");
-        dateHashmap.put(1,"present");
-        dateHashmap.put(2,"absent");
-        dateHashmap.put(3,"present");
-        dateHashmap.put(4,"absent");
-        dateHashmap.put(20,"present");
-        dateHashmap.put(30,"absent");
+        calendar =  Calendar.getInstance();
+        // per giorno corrente
+        //dateHashmap.put(calendar.get(Calendar.DAY_OF_MONTH),"event");
+
+        //prende tutte le date
+        AsyncTask.execute(()->{
+            events = db.ClassRepDAO().getAllEvent(1);
+            for (int i=0; i<events.size(); i++){
+                Date date = events.get(i).getDate();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(date);
+                if(dateCalendar.get(Calendar.MONTH)
+                        == calendar.get(Calendar.MONTH)){
+                    dateHashmap.put(dateCalendar.get(Calendar.DAY_OF_MONTH), "event");
+                }
+            }
+        });
 
         // set date
-        customCalendar.setDate(calendar,dateHashmap);
         customCalendar.setOnNavigationButtonClickedListener(CustomCalendar.PREVIOUS, this);
         customCalendar.setOnNavigationButtonClickedListener(CustomCalendar.NEXT, this);
+
+        customCalendar.setDate(calendar,dateHashmap);
 
         return view;
     }
@@ -89,22 +108,17 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
     @Override
     public Map<Integer, Object>[] onNavigationButtonClicked(int whichButton, Calendar newMonth) {
         Map<Integer, Object>[] arr = new Map[2];
-        switch(newMonth.get(Calendar.MONTH)) {
-            case Calendar.AUGUST:
-                arr[0] = new HashMap<>(); //This is the map linking a date to its description
-                arr[0].put(3, "unavailable");
-                arr[0].put(6, "holiday");
-                arr[0].put(21, "unavailable");
-                arr[0].put(24, "holiday");
-                arr[1] = null; //Optional: This is the map linking a date to its tag.
-                break;
-            case Calendar.JUNE:
-                arr[0] = new HashMap<>();
-                arr[0].put(5, "unavailable");
-                arr[0].put(10, "holiday");
-                arr[0].put(19, "holiday");
-                break;
+        arr[0] = new HashMap<>();
+        for (int i=0; i<events.size(); i++) {
+            Date date = events.get(i).getDate();
+            Calendar dateCalendar = Calendar.getInstance();
+            dateCalendar.setTime(date);
+            if (dateCalendar.get(Calendar.MONTH)
+                    == newMonth.get(Calendar.MONTH)) {
+                arr[0].put(dateCalendar.get(Calendar.DAY_OF_MONTH), "event");
+            }
         }
+        arr[1] = null;
         return arr;
     }
 }

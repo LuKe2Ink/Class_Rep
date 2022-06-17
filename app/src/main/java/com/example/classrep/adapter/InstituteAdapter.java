@@ -1,6 +1,7 @@
 package com.example.classrep.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.InstituteViewHolder> {
 
@@ -54,6 +56,7 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
 
         @BindView(R.id.grade) TextView gradeTextView;
         @BindView(R.id.school) TextView schoolTextView;
+        @BindView(R.id.profileIcon) CircleImageView profileIcon;
         private Context mContext;
 
         public InstituteViewHolder(View itemView, onInstituteListener onInstituteListener) {
@@ -68,6 +71,12 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
         public void bindInstitute(Institute institute) {
             gradeTextView.setText(institute.getGrade());
             schoolTextView.setText(institute.getInstitute());
+            System.out.println(institute.getImage());
+            if(!institute.getImage().contains("nada")){
+                profileIcon.setImageURI(Uri.parse(institute.getImage()));
+            } else {
+                profileIcon.setImageResource(R.drawable.splashscreen);
+            }
         }
 
         @Override
