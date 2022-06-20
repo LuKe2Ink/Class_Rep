@@ -15,11 +15,14 @@ import java.util.Date;
 
 
 @Entity(tableName = "meeting",
+        primaryKeys = {"id_meeting", "foreign_institute"},
         foreignKeys = @ForeignKey(entity = Institute.class, parentColumns = "id_institute", childColumns = "foreign_institute", onDelete = CASCADE),
-        indices = @Index(value = "foreign_institute"))
+        indices = {@Index(value = "foreign_institute"), @Index(value = "id_meeting", unique = true)})
 public class Meeting {
 
-    @PrimaryKey
+    @ColumnInfo(name = "id_meeting")
+    private int id_meeting;
+
     @ColumnInfo(name = "foreign_institute")
     private int foreign_institute;
 
@@ -36,16 +39,20 @@ public class Meeting {
     @ColumnInfo(name = "place")
     private String place;
 
+    @ColumnInfo(name = "note")
+    private String note;
+
     @ColumnInfo(name = "report")
     private String report;
 
-    public Meeting(int foreign_institute, String title, String type, Date date, String place, String report) {
+    public Meeting(int id_meeting, int foreign_institute, String title, String type, Date date, String place, String note) {
+        this.id_meeting = id_meeting;
         this.foreign_institute = foreign_institute;
         this.title = title;
         this.type = type;
         this.date = date;
         this.place = place;
-        this.report = report;
+        this.note=note;
     }
 
     public int getForeign_institute() {
@@ -54,6 +61,22 @@ public class Meeting {
 
     public void setForeign_institute(int foreign_institute) {
         this.foreign_institute = foreign_institute;
+    }
+
+    public int getId_meeting() {
+        return id_meeting;
+    }
+
+    public void setId_meeting(int id_meeting) {
+        this.id_meeting = id_meeting;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getTitle() {

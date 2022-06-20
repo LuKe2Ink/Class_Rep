@@ -2,13 +2,11 @@ package com.example.classrep;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,9 +24,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.classrep.adapter.InstituteAdapter;
+import com.example.classrep.adder.AddInstituteActivity;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Institute;
 import com.example.classrep.utilities.SingleToneClass;
@@ -38,9 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -135,6 +131,7 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                 case R.id.trash:
                     if(trash){
                         openOrCloseTrashcan(false, menuItem, View.INVISIBLE);
+                        removeInstitute.clear();
                     } else {
                         openOrCloseTrashcan(true, menuItem, View.VISIBLE);
                     }
@@ -142,21 +139,47 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                 case R.id.deselectAll:
                     for (int i=0; i<listInstitutes.size(); i++){
                         RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
-                        CheckBox check = view.itemView.findViewById(R.id.checkBox);
-                        check.setChecked(false);
+                        if(view != null){
+                            CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                            check.setChecked(false);
+                        }
                     }
+                    removeInstitute.clear();
                     break;
                 case R.id.selectAll:
                     for (int i=0; i<listInstitutes.size(); i++){
                         RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
-                        CheckBox check = view.itemView.findViewById(R.id.checkBox);
-                        check.setChecked(true);
+                        if(view != null){
+                            CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                            check.setChecked(false);
+                        }
+                        removeInstitute.add(listInstitutes.get(i).getId_institute());
                     }
                     break;
             }
             return false;
         });
 
+
+        recycle.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                for (int i=0; i<listInstitutes.size(); i++){
+                    RecyclerView.ViewHolder view = recycle.findViewHolderForLayoutPosition(i);
+                    if(view != null){
+                        CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                        int visible = trash ? View.VISIBLE : View.INVISIBLE;
+                        check.setVisibility(visible);
+                        if(removeInstitute.contains(listInstitutes.get(i).getId_institute())){
+                            check.setChecked(true);
+                        } else{
+                            check.setChecked(false);
+                        }
+                    }
+                }
+            }
+        });
         //Toast.makeText(getBaseContext(), String.valueOf(singleToneClass.getData("institute")), Toast.LENGTH_SHORT).show();
 
     }
@@ -165,10 +188,10 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 
         if(listInstitutes.isEmpty()){
             TextView empty = findViewById(R.id.empty);
-            empty.setVisibility(View.VISIBLE);
+            this.runOnUiThread(() -> empty.setVisibility(View.VISIBLE));
         } else {
             adapter = new InstituteAdapter(getApplicationContext(), listInstitutes, this);
-            recycle.setAdapter(adapter);
+            this.runOnUiThread(() ->recycle.setAdapter(adapter));
         }
     }
 
@@ -185,12 +208,11 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                 removeInstitute.remove(removeInstitute.indexOf(id));
                 check.setChecked(false);
             }
-            System.out.println(removeInstitute);
         } else {
-            Institute item = listInstitutes.get(position);
+            int item = listInstitutes.get(position).getId_institute();
 
             SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
-            singleToneClass.setData("institute",item.getId_institute());
+            singleToneClass.setData("institute",item);
 
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
@@ -207,8 +229,10 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 
         for (int i=0; i<listInstitutes.size(); i++){
             RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
-            CheckBox check = view.itemView.findViewById(R.id.checkBox);
-            check.setVisibility(visible);
+            if(view != null){
+                CheckBox check = view.itemView.findViewById(R.id.checkBox);
+                check.setVisibility(visible);
+            }
         }
 
         add.setImageResource(boo ? R.drawable.ic_open_trashcan : R.drawable.ic_baseline_add_24 );

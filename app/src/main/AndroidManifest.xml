@@ -15,9 +15,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClassRep">
         <activity
-            android:name=".HomeActivity"
-            android:screenOrientation="portrait"
+            android:name=".adder.AddPtaActivity"
             android:exported="false" />
+        <activity
+            android:name=".adder.AddMeetingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adder.AddEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SingleEntity.FundChronologyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SingleEntity.PtaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SingleEntity.EventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SingleEntity.MeetingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -28,19 +49,19 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
-
         <activity
-            android:name=".AddInstituteActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:name=".adder.AddInstituteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SelectionActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

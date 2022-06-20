@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="selection_appbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:fillColor">#FFF</item></style>
+</resources>

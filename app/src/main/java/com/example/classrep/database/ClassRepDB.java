@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities =
             {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class}
-             , version = 3, exportSchema = false)
+             , version = 5, exportSchema = false)
 public abstract class ClassRepDB extends RoomDatabase {
 
     public abstract ClassRepDAO ClassRepDAO();

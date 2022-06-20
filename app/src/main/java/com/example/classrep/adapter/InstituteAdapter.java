@@ -35,7 +35,7 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
 
     @Override
     public InstituteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_home_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_selection, parent, false);
         InstituteViewHolder viewHolder = new InstituteViewHolder(view, mOnInstituteListener);
         return viewHolder;
     }

@@ -20,5 +20,5 @@
         android:title=""
         android:icon="@drawable/ic_closed_trashcan"
         android:contentDescription="@string/trash"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

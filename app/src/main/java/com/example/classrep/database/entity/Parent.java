@@ -2,6 +2,7 @@ package com.example.classrep.database.entity;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -21,9 +22,11 @@ import java.util.Date;
 
 public class Parent {
 
+    @Nullable
     @ColumnInfo(name = "foreign_event")
     private int foreign_event;
 
+    @Nullable
     @ColumnInfo(name = "foreign_pta")
     private int foreign_pta;
 

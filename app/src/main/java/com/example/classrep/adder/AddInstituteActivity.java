@@ -1,4 +1,4 @@
-package com.example.classrep;
+package com.example.classrep.adder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.classrep.R;
+import com.example.classrep.SelectionActivity;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Institute;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
