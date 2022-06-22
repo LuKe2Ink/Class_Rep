@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import com.example.classrep.R;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Event;
+import com.example.classrep.database.entity.Meeting;
+import com.example.classrep.database.entity.PTAmeeting;
 
 import org.naishadhparmar.zcustomcalendar.CustomCalendar;
 import org.naishadhparmar.zcustomcalendar.OnNavigationButtonClickedListener;
@@ -29,6 +31,8 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
     private ClassRepDB db;
 
     private List<Event> events;
+    private List<Meeting> meetings;
+    private List<PTAmeeting> ptameetings;
     Calendar calendar;
 
     @Nullable
@@ -53,23 +57,17 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
         // Put object and property
         descHashMap.put("default",defaultProperty);
 
-        // for current date
+        // for event
         Property currentProperty=new Property();
         currentProperty.layoutResource=R.layout.calendar_event;
         currentProperty.dateTextViewResource=R.id.text_view;
         descHashMap.put("event",currentProperty);
 
-        // for present date
+        // for meeting
         Property presentProperty=new Property();
         presentProperty.layoutResource=R.layout.calendar_meeting;
         presentProperty.dateTextViewResource=R.id.text_view;
         descHashMap.put("meeting",presentProperty);
-
-        // For absent
-        Property absentProperty =new Property();
-        absentProperty.layoutResource=R.layout.calendar_pta;
-        absentProperty.dateTextViewResource=R.id.text_view;
-        descHashMap.put("pta",absentProperty);
 
         // set desc hashmap on custom calendar
         customCalendar.setMapDescToProp(descHashMap);
@@ -84,6 +82,7 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
 
         //prende tutte le date
         AsyncTask.execute(()->{
+            //Eventi
             events = db.ClassRepDAO().getAllEvent(1);
             for (int i=0; i<events.size(); i++){
                 Date date = events.get(i).getDate();
@@ -92,6 +91,28 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
                 if(dateCalendar.get(Calendar.MONTH)
                         == calendar.get(Calendar.MONTH)){
                     dateHashmap.put(dateCalendar.get(Calendar.DAY_OF_MONTH), "event");
+                }
+            }
+            //Riunioni
+            meetings = db.ClassRepDAO().getAllMeeting(1);
+            for (int i=0; i<meetings.size(); i++){
+                Date date = meetings.get(i).getDate();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(date);
+                if(dateCalendar.get(Calendar.MONTH)
+                        == calendar.get(Calendar.MONTH)){
+                    dateHashmap.put(dateCalendar.get(Calendar.DAY_OF_MONTH), "meeting");
+                }
+            }
+            //Colloqui
+            ptameetings = db.ClassRepDAO().getAllPTAmeeting(1);
+            for (int i=0; i<ptameetings.size(); i++){
+                Date date = ptameetings.get(i).getStart_date();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(date);
+                if(dateCalendar.get(Calendar.MONTH)
+                        == calendar.get(Calendar.MONTH)){
+                    dateHashmap.put(dateCalendar.get(Calendar.DAY_OF_MONTH), "pta");
                 }
             }
         });
@@ -116,6 +137,24 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
             if (dateCalendar.get(Calendar.MONTH)
                     == newMonth.get(Calendar.MONTH)) {
                 arr[0].put(dateCalendar.get(Calendar.DAY_OF_MONTH), "event");
+            }
+        }
+        for (int i=0; i<meetings.size(); i++) {
+            Date date = meetings.get(i).getDate();
+            Calendar dateCalendar = Calendar.getInstance();
+            dateCalendar.setTime(date);
+            if (dateCalendar.get(Calendar.MONTH)
+                    == newMonth.get(Calendar.MONTH)) {
+                arr[0].put(dateCalendar.get(Calendar.DAY_OF_MONTH), "meeting");
+            }
+        }
+        for (int i=0; i<ptameetings.size(); i++) {
+            Date date = ptameetings.get(i).getStart_date();
+            Calendar dateCalendar = Calendar.getInstance();
+            dateCalendar.setTime(date);
+            if (dateCalendar.get(Calendar.MONTH)
+                    == newMonth.get(Calendar.MONTH)) {
+                arr[0].put(dateCalendar.get(Calendar.DAY_OF_MONTH), "pta");
             }
         }
         arr[1] = null;

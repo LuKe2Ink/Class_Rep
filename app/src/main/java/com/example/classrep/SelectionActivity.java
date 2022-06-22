@@ -151,7 +151,7 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                         RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(i);
                         if(view != null){
                             CheckBox check = view.itemView.findViewById(R.id.checkBox);
-                            check.setChecked(false);
+                            check.setChecked(true);
                         }
                         removeInstitute.add(listInstitutes.get(i).getId_institute());
                     }

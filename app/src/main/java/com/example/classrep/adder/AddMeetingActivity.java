@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.classrep.R;
+
 public class AddMeetingActivity extends AppCompatActivity {
 
     @Override

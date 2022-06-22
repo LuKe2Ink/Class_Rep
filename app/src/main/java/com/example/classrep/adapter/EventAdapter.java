@@ -35,6 +35,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.events = events;
         this.parents = parents;
         this.children = children;
+        System.out.println(parents);
+        System.out.println(children);
 
         this.mOnEventListener = onEventListener;
     }
@@ -48,7 +50,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
-        holder.bindMeeting(events.get(position), parents.get(position), parents.get(position));
+        holder.bindEvent(events.get(position), parents.get(position), children.get(position));
     }
 
     @Override
@@ -78,14 +80,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             itemView.setOnClickListener(this);
         }
 
-        public void bindMeeting(Event meeting, int parents, int children) {
+        public void bindEvent(Event meeting, int parents, int children) {
             title.setText(meeting.getTitle());
             Calendar cal = Calendar.getInstance();
             cal.setTime(meeting.getDate());
             date.setText(format1.format(cal.getTime()));
             place.setText(meeting.getPlace());
-            textParents.setText(parents > 1 ? String.valueOf(parents)+"Genitori" : String.valueOf(parents)+"Genitore");
-            textChildren.setText(children > 1 ? String.valueOf(parents)+"Bambini" : String.valueOf(parents)+"Bambino");
+            textParents.setVisibility(View.VISIBLE);
+            textChildren.setVisibility(View.VISIBLE);
+            textParents.setText("Genitori: "+String.valueOf(parents));
+            textChildren.setText("Bambini: "+String.valueOf(parents));
 
             note.setVisibility(View.INVISIBLE);
         }

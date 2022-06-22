@@ -7,26 +7,24 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.example.classrep.database.DataConverter;
 
 import java.util.Date;
 
-@Entity(tableName = "parent",
-        primaryKeys = {"foreign_event", "foreign_pta"},
-        foreignKeys = {
-            @ForeignKey(entity = Event.class, parentColumns = "id_event", childColumns = "foreign_event", onDelete = CASCADE),
-            @ForeignKey(entity = PTAmeeting.class, parentColumns = "id_pta", childColumns = "foreign_pta", onDelete = CASCADE)},
-        indices = {@Index(value = "foreign_event"), @Index(value = "foreign_pta")})
+@Entity(tableName = "parent")
 
 public class Parent {
 
-    @Nullable
+    @PrimaryKey
+    @ColumnInfo(name = "id_parent")
+    private int id_parent;
+
     @ColumnInfo(name = "foreign_event")
     private int foreign_event;
 
-    @Nullable
     @ColumnInfo(name = "foreign_pta")
     private int foreign_pta;
 
@@ -40,12 +38,21 @@ public class Parent {
     @TypeConverters({DataConverter.class})
     private Date time;
 
-    public Parent(int foreign_event, int foreign_pta, String name, String surname, Date time) {
+    public Parent(int id_parent, int foreign_event, int foreign_pta, String name, String surname, Date time) {
+        this.id_parent = id_parent;
         this.foreign_event = foreign_event;
         this.foreign_pta = foreign_pta;
         this.name = name;
         this.surname = surname;
         this.time = time;
+    }
+
+    public int getId_parent() {
+        return id_parent;
+    }
+
+    public void setId_parent(int id_parent) {
+        this.id_parent = id_parent;
     }
 
     public int getForeign_event() {

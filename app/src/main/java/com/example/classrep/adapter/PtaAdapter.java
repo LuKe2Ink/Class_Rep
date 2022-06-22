@@ -80,11 +80,11 @@ public class PtaAdapter extends  RecyclerView.Adapter<PtaAdapter.PtaViewHolder> 
             Calendar cal1 = Calendar.getInstance();
             cal1.setTime(pta.getStart_date());
             start.setVisibility(View.VISIBLE);
-            start.setText(format1.format(cal1));
+            start.setText(format1.format(cal1.getTime()));
             Calendar cal2 = Calendar.getInstance();
             cal2.setTime(pta.getStart_date());
             finish.setVisibility(View.VISIBLE);
-            finish.setText(format1.format(cal1));
+            finish.setText(format1.format(cal2.getTime()));
             date.setText(pta.getSubject());
 
             note.setVisibility(View.INVISIBLE);

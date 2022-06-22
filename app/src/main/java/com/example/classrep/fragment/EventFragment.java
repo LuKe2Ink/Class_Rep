@@ -1,5 +1,6 @@
 package com.example.classrep.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,13 +21,19 @@ import android.widget.Toast;
 import com.example.classrep.R;
 import com.example.classrep.adapter.EventAdapter;
 import com.example.classrep.adapter.MeetingAdapter;
+import com.example.classrep.adder.AddEventActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Child;
 import com.example.classrep.database.entity.Event;
+import com.example.classrep.database.entity.PTAmeeting;
+import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -39,6 +46,8 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
     private List<Integer> numberChildrenForEvents = new ArrayList<>();
     private boolean trash = false;
 
+    private int count = 1;
+
     private ClassRepDB db;
     private RecyclerView recycle;
     private SingleToneClass singleToneClass;
@@ -48,7 +57,7 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
     private FloatingActionButton add;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,8 +93,8 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
                     adapter.notifyDataSetChanged();
                 }
             } else {
-//                Intent intent = new Intent(this.getContext(), AddMeetingActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this.getContext(), AddEventActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -148,7 +157,7 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
 
     private void createRecycler() {
         adapter = new EventAdapter(view.getContext(), events, numberParentsForEvents, numberChildrenForEvents, this);
-        recycle.setAdapter(adapter);
+        getActivity().runOnUiThread(()->recycle.setAdapter(adapter));
     }
 
     @Override

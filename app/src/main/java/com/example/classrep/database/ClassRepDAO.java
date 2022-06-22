@@ -5,6 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.TypeConverters;
+import androidx.room.Update;
 
 import com.example.classrep.database.entity.Adhesion;
 import com.example.classrep.database.entity.Child;
@@ -15,6 +16,7 @@ import com.example.classrep.database.entity.Institute;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.database.entity.Parent;
+import com.example.classrep.database.entity.Settings;
 
 import java.util.Date;
 import java.util.List;
@@ -59,6 +61,15 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM child WHERE foreign_event = :id")
     List<Child> getEventChildren(int id);
 
+    @Query("DELETE FROM child WHERE id_child = :id")
+    void deleteChild(int id);
+
+    @Update
+    void updateChild(Child child);
+
+    @Query("SELECT MAX(id_child) FROM child")
+    int getMaxIdChild();
+
 
 
     //Query per entità Event
@@ -71,6 +82,15 @@ public interface ClassRepDAO {
 
     @Query("SELECT * FROM event WHERE children = :child AND adhesions = :adhesion")
     List<Event> getFilteredEvent(boolean child, boolean adhesion);
+
+    @Query("DELETE FROM event WHERE id_event = :id")
+    void deleteEvent(int id);
+
+    @Update
+    void updateEvent(Event event);
+
+    @Query("SELECT MAX(id_event) FROM event")
+    int getMaxIdEvent();
 
 
 
@@ -113,8 +133,14 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM meeting WHERE foreign_institute = :id")
     List<Meeting> getAllMeeting(int id);
 
+    @Query("DELETE FROM meeting WHERE id_meeting = :id")
+    void deleteMeeting(int id);
+
     @Query("UPDATE meeting SET report = :text")
     void updateReport(String text);
+
+    @Query("SELECT MAX(id_meeting) FROM meeting")
+    int getMaxIdMeeting();
 
 
 
@@ -129,6 +155,21 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM parent WHERE foreign_pta = :id")
     List<Parent> getPTAmeetingParents(int id);
 
+    @Query("DELETE FROM parent WHERE id_parent = :id")
+    void deleteParent(int id);
+
+    @Query("DELETE FROM parent WHERE foreign_pta = :id")
+    void deleteParentFromPta(int id);
+
+    @Query("DELETE FROM parent WHERE foreign_event = :id")
+    void deleteParentFromEvent(int id);
+
+    @Update
+    void updateParent(Parent parent);
+
+    @Query("SELECT MAX(id_parent) FROM parent")
+    int getMaxIdParent();
+
 
 
     //Query per entità PTAmeeting
@@ -139,4 +180,16 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM pta_meeting WHERE foreign_institute = :id")
     List<PTAmeeting> getAllPTAmeeting(int id);
 
+    @Update
+    void updatePtaMeeting(PTAmeeting ptAmeeting);
+
+    //Query per entità Setting
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertSettings(Settings...settings);
+
+    @Query("SELECT * FROM setting WHERE foreign_institute = :id")
+    Settings getSetting(int id);
+
+    @Update
+    void updateSetting(Settings settings);
 }

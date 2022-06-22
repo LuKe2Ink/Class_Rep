@@ -11,4 +11,10 @@
     <string name="trash">trashcan</string>
     <string name="deselectAll">deselect all</string>
     <string name="selectAll">select all</string>
+    <string name="titolo">Titolo</string>
+    <string name="data">Data</string>
+    <string name="posto">Posto</string>
+    <string name="note">Note</string>
+    <string name="nome">Nome</string>
+    <string name="cognome">Cognome</string>
 </resources>

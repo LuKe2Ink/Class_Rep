@@ -5,8 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp"
-    android:layout_margin="10dp"
-    app:strokeColor="@color/white"
+    android:layout_margin="1dp"
+    app:cardElevation="5dp"
+    android:outlineSpotShadowColor="@color/white"
+    app:cardUseCompatPadding="true"
+    app:strokeColor="@color/purple_500"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,10 +100,10 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.008"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/note"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.793" />
+            app:layout_constraintVertical_bias="0.702" />
 
         <TextView
             android:id="@+id/dateOrChildren"
@@ -110,10 +113,10 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.416"
+            app:layout_constraintHorizontal_bias="0.446"
             app:layout_constraintStart_toEndOf="@+id/dateOrParent"
             app:layout_constraintTop_toTopOf="@+id/view"
-            app:layout_constraintVertical_bias="0.793" />
+            app:layout_constraintVertical_bias="0.702" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

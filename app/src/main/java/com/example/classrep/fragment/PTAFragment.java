@@ -145,7 +145,7 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
 
     private void createRecycler() {
         adapter = new PtaAdapter(view.getContext(), ptaMeetings, this);
-        recycle.setAdapter(adapter);
+        getActivity().runOnUiThread(()->recycle.setAdapter(adapter));
     }
 
     @Override

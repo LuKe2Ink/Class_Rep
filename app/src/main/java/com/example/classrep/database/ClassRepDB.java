@@ -15,13 +15,14 @@ import com.example.classrep.database.entity.Institute;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.database.entity.Parent;
+import com.example.classrep.database.entity.Settings;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities =
-            {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class}
-             , version = 5, exportSchema = false)
+            {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class, Settings.class}
+             , version = 2, exportSchema = false)
 public abstract class ClassRepDB extends RoomDatabase {
 
     public abstract ClassRepDAO ClassRepDAO();

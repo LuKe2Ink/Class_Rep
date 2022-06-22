@@ -141,7 +141,7 @@ public class MeetingFragment extends Fragment implements MeetingAdapter.onMeetin
 
     private void createRecycler() {
         adapter = new MeetingAdapter(view.getContext(), meetings, this);
-        recycle.setAdapter(adapter);
+        getActivity().runOnUiThread(()->recycle.setAdapter(adapter));
     }
 
     @Override
