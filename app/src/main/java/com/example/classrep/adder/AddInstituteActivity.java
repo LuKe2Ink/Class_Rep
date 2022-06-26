@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
 import com.example.classrep.SelectionActivity;
 import com.example.classrep.database.ClassRepDB;

@@ -71,6 +71,7 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
 
         AsyncTask.execute(()->{
             events = db.ClassRepDAO().getAllEvent(singleToneClass.getData("institute"));
+            System.out.println(events);
             for (int i=0; i<events.size() ; i++){
                 numberParentsForEvents.add(db.ClassRepDAO().getEventParents(events.get(i).getId_event()).size());
                 numberChildrenForEvents.add(db.ClassRepDAO().getEventChildren(events.get(i).getId_event()).size());
@@ -86,8 +87,10 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
                     events.removeIf(contain);
                     openOrCloseTrashcan(false, topAppbar.getMenu().findItem(R.id.trash), View.INVISIBLE);
 
+
                     AsyncTask.execute(()->{
-                        db.ClassRepDAO().deleteInstitute(removeEvents);
+                        db.ClassRepDAO().deleteEvent(removeEvents);
+                        db.ClassRepDAO().deleteParentFromEvent(removeEvents);
                         removeEvents.clear();
                     });
                     adapter.notifyDataSetChanged();
@@ -164,7 +167,6 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
     public void onEventClick(int position) {
         if(trash){
             int id = events.get(position).getId_event();
-            Toast.makeText(getContext(), removeEvents.toString(), Toast.LENGTH_SHORT).show();
             RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(position);
             CheckBox check = view.itemView.findViewById(R.id.checkBoxAdapter);
             if (!removeEvents.contains(id)) {

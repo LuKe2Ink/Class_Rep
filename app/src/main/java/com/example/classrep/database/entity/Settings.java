@@ -16,8 +16,8 @@ public class Settings {
     @ColumnInfo(name = "foreign_institute")
     private int foreign_institute;
 
-    @ColumnInfo(name = "theme_mode")
-    private boolean theme_mode;
+    @ColumnInfo(name = "color_App_bar")
+    private int color_App_bar;
 
     @ColumnInfo(name = "notification")
     private boolean notification;
@@ -25,11 +25,19 @@ public class Settings {
     @ColumnInfo(name = "last_notification")
     private boolean last_notification;
 
-    public Settings(int foreign_institute, boolean theme_mode, boolean notification, boolean last_notification) {
+    public Settings(int foreign_institute, int color_App_bar, boolean notification, boolean last_notification) {
         this.foreign_institute = foreign_institute;
-        this.theme_mode = theme_mode;
+        this.color_App_bar = color_App_bar;
         this.notification = notification;
         this.last_notification = last_notification;
+    }
+
+    public int getColor_App_bar() {
+        return color_App_bar;
+    }
+
+    public void setColor_App_bar(int color_App_bar) {
+        this.color_App_bar = color_App_bar;
     }
 
     public int getForeign_institute() {
@@ -40,13 +48,6 @@ public class Settings {
         this.foreign_institute = foreign_institute;
     }
 
-    public boolean isTheme_mode() {
-        return theme_mode;
-    }
-
-    public void setTheme_mode(boolean theme_mode) {
-        this.theme_mode = theme_mode;
-    }
 
     public boolean isNotification() {
         return notification;

@@ -65,4 +65,9 @@ public class Child {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    public String toTesto(){
+        String testo= "Bambino: "+ this.getName()+" "+this.getSurname();
+        return testo;
+    }
 }

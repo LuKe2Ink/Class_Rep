@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,10 +29,14 @@ import android.widget.Toast;
 import com.example.classrep.adapter.InstituteAdapter;
 import com.example.classrep.adder.AddInstituteActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.Institute;
+import com.example.classrep.database.entity.Meeting;
+import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,6 +47,7 @@ import java.util.function.Predicate;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 
 public class SelectionActivity extends AppCompatActivity implements InstituteAdapter.onInstituteListener {
 
@@ -215,6 +221,7 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
             singleToneClass.setData("institute",item);
 
             Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("fragment", "calendar");
             startActivity(intent);
         }
     }
@@ -238,6 +245,16 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
         add.setImageResource(boo ? R.drawable.ic_open_trashcan : R.drawable.ic_baseline_add_24 );
     }
 
+
+//    Intent intent
+//            = new Intent(Intent.ACTION_SEND);
+//
+//                    intent.setType("text/plain");
+//                    intent.setPackage("com.whatsapp");
+//
+//    // Give your message here
+//                    intent.putExtra(Intent.EXTRA_TEXT, "");
+//    startActivity(intent);
     //PER LA CREAZIONE DEL PDF
     //POTREI FARE CHE ACCETTA COME INGRESSO UNA MAPPA CON CHIAVI E VALORI
     //TITOLO, NOTE(?), DATA, RAPPORTO
@@ -339,7 +356,6 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 
 
     //PER LE RICHIESTE DI SCRITTURA E LETTURA
-
     private boolean checkPermission() {
         // checking of permissions.
         int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);

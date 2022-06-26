@@ -3,4 +3,23 @@
 
     <style name="selection_appbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:fillColor">#FFF</item></style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Dialog">
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+        <item name="android:colorBackground">@color/black</item>
+        <item name="android:timePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/purple_700</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:headerBackground">@color/purple_700</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+
 </resources>
+

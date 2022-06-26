@@ -40,4 +40,9 @@ public class Adhesion {
     public void setMoney(double money) {
         this.money = money;
     }
+
+    public String toTesto(){
+        String testo= "Soldi: " + String.valueOf(this.getMoney());
+        return testo;
+    }
 }

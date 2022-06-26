@@ -1,5 +1,7 @@
 package com.example.classrep.fragment;
 
+import android.content.AsyncQueryHandler;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,12 +20,17 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.example.classrep.R;
+import com.example.classrep.SingleActivity.PtaActivity;
 import com.example.classrep.adapter.PtaAdapter;
+import com.example.classrep.adder.AddPtaActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.PTAmeeting;
+import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +58,7 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         db = ClassRepDB.getDatabase(getContext());
+
         singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
 
         view = inflater.inflate(R.layout.fragments_home, container, false);
@@ -75,14 +83,16 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
                     openOrCloseTrashcan(false, topAppbar.getMenu().findItem(R.id.trash), View.INVISIBLE);
 
                     AsyncTask.execute(()->{
-                        db.ClassRepDAO().deleteInstitute(removePta);
+                        db.ClassRepDAO().deletePTAmeeting(removePta);
+                        db.ClassRepDAO().deleteParentFromPta(removePta);
                         removePta.clear();
+
                     });
                     adapter.notifyDataSetChanged();
                 }
             } else {
-//                Intent intent = new Intent(this.getContext(), AddMeetingActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this.getContext(), AddPtaActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -150,9 +160,9 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
 
     @Override
     public void onPtaClick(int position) {
+        int id = ptaMeetings.get(position).getId_pta();
+
         if(trash){
-            int id = ptaMeetings.get(position).getId_pta();
-            Toast.makeText(getContext(), removePta.toString(), Toast.LENGTH_SHORT).show();
             RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(position);
             CheckBox check = view.itemView.findViewById(R.id.checkBoxAdapter);
             if (!removePta.contains(id)) {
@@ -165,10 +175,20 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
         } else {
             int item = ptaMeetings.get(position).getId_pta();
 
-            singleToneClass.setData("event", item);
+            singleToneClass.setData("pta", item);
 
-//            Intent intent = new Intent(this, SingleMeetingActivity.class);
-//            startActivity(intent);
+            AsyncTask.execute(()->{
+                Intent intent = new Intent(getContext(), PtaActivity.class);
+                List<Parent> parents = db.ClassRepDAO().getPTAmeetingParents(id);
+                String jsParent = new Gson().toJson(parents);
+                System.out.println(jsParent);
+                intent.putExtra("parents", jsParent);
+                String jsPta = new Gson().toJson(db.ClassRepDAO().getSinglePta(item));
+                intent.putExtra("pta", jsPta);
+                System.out.println(jsPta);
+                startActivity(intent);
+            });
+
         }
     }
 

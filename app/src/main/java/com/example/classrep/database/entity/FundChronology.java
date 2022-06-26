@@ -16,16 +16,19 @@ import java.util.Date;
 
 
 @Entity(tableName = "fund_chronology",
+        primaryKeys = {"id_funcChron", "foreign_fund"},
         foreignKeys = @ForeignKey(entity = Fund.class, parentColumns = "id_fund", childColumns = "foreign_fund", onDelete = CASCADE),
-        indices = @Index(value = "foreign_fund"))
+        indices = {@Index(value = "foreign_fund"), @Index(value = "id_funcChron")})
 public class FundChronology {
 
-    @PrimaryKey
+    @ColumnInfo(name = "id_funcChron")
+    private int id_funcChron;
+
     @ColumnInfo(name = "foreign_fund")
     private int foreign_fund;
 
     @ColumnInfo(name = "quantity")
-    private int quantity;
+    private double quantity;
 
     @ColumnInfo(name = "action")
     private String action;
@@ -37,12 +40,21 @@ public class FundChronology {
     @ColumnInfo(name = "causal")
     private String causal;
 
-    public FundChronology(int foreign_fund, int quantity, String action, Date date, String causal) {
+    public FundChronology(int id_funcChron, int foreign_fund, double quantity, String action, Date date, String causal) {
+        this.id_funcChron = id_funcChron;
         this.foreign_fund = foreign_fund;
         this.quantity = quantity;
         this.action = action;
         this.date = date;
         this.causal = causal;
+    }
+
+    public int getId_funcChron() {
+        return id_funcChron;
+    }
+
+    public void setId_funcChron(int id_funcChron) {
+        this.id_funcChron = id_funcChron;
     }
 
     public int getForeign_fund() {
@@ -53,11 +65,11 @@ public class FundChronology {
         this.foreign_fund = foreign_fund;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 

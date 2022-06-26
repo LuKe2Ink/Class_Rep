@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.classrep.R;
+import com.example.classrep.database.entity.Adhesion;
+import com.example.classrep.database.entity.Child;
+import com.example.classrep.database.entity.Parent;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
@@ -28,16 +34,39 @@ import butterknife.ButterKnife;
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonViewHolder>{
 
     private List<Integer> people = new ArrayList<>();
+    private List<Parent> parents = new ArrayList<>();
+    private List<Child> children = new ArrayList<>();
+    private List<Adhesion> adhesion = new ArrayList<>();
     private Context context;
     private String type;
+    private boolean singleOrAdd;
 
     SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-    public PersonAdapter(Context context, List<Integer> people, String type) {
+    public PersonAdapter(Context context, String type, boolean singleOrAdd) {
         this.context = context;
-        this.people = people;
         this.type = type;
+        this.singleOrAdd = singleOrAdd;
     }
+
+    public void addPeople(List<Integer> people){
+        this.people = people;
+    }
+    public void addParents(List<Parent> parents){
+        this.parents = parents;
+    }
+    public void addChildren(List<Child> children){
+        this.children = children;
+    }
+    public void addAdhesion(List<Adhesion> adhesion){
+        this.adhesion = adhesion;
+    }
+
+    public void setSingleOrAdd(boolean bool){
+        this.singleOrAdd = bool;
+    }
+
+
 
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,6 +75,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         return viewHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int position) {
         holder.bindPta(position);
@@ -53,6 +83,13 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
 
     @Override
     public int getItemCount() {
+        if(!parents.isEmpty()){
+            return parents.size();
+        } else if(!children.isEmpty()){
+            return parents.size();
+        } else if(!adhesion.isEmpty()){
+            return adhesion.size();
+        }
         return people.size();
     }
 
@@ -62,7 +99,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         int hours;
         int minutes;
 
-        @BindView(R.id.time) Button time;
+        @BindView(R.id.time) EditText time;
         @BindView(R.id.trashPerson) Button delete;
         @BindView(R.id.nome) EditText name;
         @BindView(R.id.cognome) EditText surname;
@@ -75,11 +112,49 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
             mContext = itemView.getContext();
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void bindPta(int ciao) {
+
+            if (!parents.isEmpty()){
+                name.setText(parents.get(ciao).getName());
+                name.setEnabled(true);
+                surname.setText(parents.get(ciao).getSurname());
+                surname.setEnabled(true);
+                String pattern = "HH:mm";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String date = simpleDateFormat.format(parents.get(ciao).getTime());
+                time.setText(date);
+                time.setEnabled(true);
+                delete.setVisibility(View.VISIBLE);
+            } else if(!children.isEmpty()){
+                name.setText(children.get(ciao).getName());
+                name.setEnabled(true);
+                surname.setText(children.get(ciao).getSurname());
+                surname.setEnabled(true);
+                delete.setVisibility(View.VISIBLE);
+            } else if(!adhesion.isEmpty()){
+                surname.setText(String.valueOf(adhesion.get(ciao).getMoney()));
+                surname.setEnabled(true);
+                delete.setVisibility(View.VISIBLE);
+            }
+
+            if(singleOrAdd){
+                time.setClickable(false);
+                time.setEnabled(false);
+
+                name.setClickable(false);
+                name.setEnabled(false);
+
+                surname.setClickable(false);
+                surname.setEnabled(false);
+
+                delete.setVisibility(View.GONE);
+            }
 
             if(type.contains("adhesion")){
                 name.setVisibility(View.INVISIBLE);
                 surname.setHint("Conto");
+                surname.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             }
             if(!type.contains("parent")){
                 time.setVisibility(View.INVISIBLE);
@@ -114,4 +189,5 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         }
 
     }
+
 }

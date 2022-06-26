@@ -10,6 +10,8 @@ import androidx.room.TypeConverters;
 
 import com.example.classrep.database.DataConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity(tableName = "event",
@@ -118,4 +120,13 @@ public class Event {
         this.place = place;
     }
 
+    public String toTesto(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String testo=
+                this.getTitle()+"\n"
+                +dateFormat.format(this.getDate())+"\n"
+                +this.getPlace()+"\n"
+                +this.getNote();
+        return testo;
+    }
 }

@@ -22,14 +22,14 @@ import java.util.concurrent.Executors;
 
 @Database(entities =
             {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class, Settings.class}
-             , version = 2, exportSchema = false)
+             , version = 1, exportSchema = false)
 public abstract class ClassRepDB extends RoomDatabase {
 
     public abstract ClassRepDAO ClassRepDAO();
 
     private static volatile ClassRepDB INSTANCE;
 
-    static final ExecutorService executor = Executors.newFixedThreadPool(4);
+    static final ExecutorService executor = Executors.newFixedThreadPool(8);
 
     public static synchronized ClassRepDB getDatabase(final Context context) {
         if (INSTANCE == null) {

@@ -11,6 +11,8 @@ import androidx.room.TypeConverters;
 
 import com.example.classrep.database.DataConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -117,5 +119,17 @@ public class Meeting {
 
     public void setReport(String report) {
         this.report = report;
+    }
+
+    public String toTesto(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String testo=
+                this.getTitle()+"\n"
+                +this.getType()+"\n"
+                +dateFormat.format(this.getDate())+"\n"
+                +this.getPlace()+"\n"
+                +this.getNote()+"\n"
+                +this.getReport()+"\n";
+        return testo;
     }
 }

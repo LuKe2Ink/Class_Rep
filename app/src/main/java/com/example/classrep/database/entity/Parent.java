@@ -12,6 +12,8 @@ import androidx.room.TypeConverters;
 
 import com.example.classrep.database.DataConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity(tableName = "parent")
@@ -93,5 +95,12 @@ public class Parent {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+
+    public String toTesto(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        String testo = "Genitore: "+this.getName()+" "+this.getSurname()+" "+"Ora: "+dateFormat.format(this.getTime());
+        return testo;
     }
 }

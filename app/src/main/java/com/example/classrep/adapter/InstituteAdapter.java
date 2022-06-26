@@ -1,6 +1,7 @@
 package com.example.classrep.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,7 @@ public class InstituteAdapter extends RecyclerView.Adapter<InstituteAdapter.Inst
             } else {
                 profileIcon.setImageResource(R.drawable.splashscreen);
             }
+            //schoolTextView.setTextColor(Color.parseColor("#000000"));
         }
 
         @Override

@@ -10,6 +10,8 @@ import androidx.room.TypeConverters;
 
 import com.example.classrep.database.DataConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -107,5 +109,16 @@ public class PTAmeeting {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public String toTesto(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat1 = new SimpleDateFormat("HH:mm");
+        String testo=
+                this.getName()+" "+this.getSurname()+"\n"
+                +this.getSubject()+"\n"
+                +dateFormat.format(this.getStart_date())
+                +"Da: "+dateFormat1.format(this.getStart_date())+" a:"+dateFormat1.format(this.getFinish_date());
+        return testo;
     }
 }

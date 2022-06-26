@@ -1,5 +1,6 @@
 package com.example.classrep.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.classrep.R;
 import com.example.classrep.adapter.MeetingAdapter;
+import com.example.classrep.adder.AddMeetingActivity;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.utilities.SingleToneClass;
@@ -71,14 +73,14 @@ public class MeetingFragment extends Fragment implements MeetingAdapter.onMeetin
                     openOrCloseTrashcan(false, topAppbar.getMenu().findItem(R.id.trash), View.INVISIBLE);
 
                     AsyncTask.execute(()->{
-                        db.ClassRepDAO().deleteInstitute(removeMeetings);
+                        db.ClassRepDAO().deleteMeeting(removeMeetings);
                         removeMeetings.clear();
                     });
                     adapter.notifyDataSetChanged();
                 }
             } else {
-//                Intent intent = new Intent(this.getContext(), AddMeetingActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this.getContext(), AddMeetingActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -148,7 +150,6 @@ public class MeetingFragment extends Fragment implements MeetingAdapter.onMeetin
     public void onMeetingClick(int position) {
         if(trash){
             int id = meetings.get(position).getId_meeting();
-            Toast.makeText(getContext(), removeMeetings.toString(), Toast.LENGTH_SHORT).show();
             RecyclerView.ViewHolder view = recycle.findViewHolderForAdapterPosition(position);
             CheckBox check = view.itemView.findViewById(R.id.checkBoxAdapter);
             if (!removeMeetings.contains(id)) {

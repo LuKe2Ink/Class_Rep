@@ -89,7 +89,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textParents.setVisibility(View.VISIBLE);
             textChildren.setVisibility(View.VISIBLE);
             textParents.setText("Genitori: "+String.valueOf(parents));
-            textChildren.setText("Bambini: "+String.valueOf(parents));
+            textChildren.setText("Bambini: "+String.valueOf(children));
 
             note.setVisibility(View.INVISIBLE);
         }

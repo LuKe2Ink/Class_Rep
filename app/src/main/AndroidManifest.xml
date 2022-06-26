@@ -15,26 +15,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClassRep">
         <activity
-            android:name=".adder.AddPtaActivity"
+            android:name=".ProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adder.AddPtaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adder.AddMeetingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adder.AddEventActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SingleEntity.FundChronologyActivity"
-            android:exported="false" />
+            android:name=".SingleActivity.FundChronologyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SingleEntity.PtaActivity"
-            android:exported="false" />
+            android:name=".SingleActivity.PtaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SingleEntity.EventActivity"
-            android:exported="false" />
+            android:name=".SingleActivity.EventActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SingleEntity.MeetingActivity"
-            android:exported="false" />
+            android:name=".SingleActivity.MeetingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomeActivity"
             android:exported="false"

@@ -76,13 +76,13 @@ public class PtaAdapter extends  RecyclerView.Adapter<PtaAdapter.PtaViewHolder> 
         }
 
         public void bindPta(PTAmeeting pta) {
-            title.setText(pta.getName()+pta.getSurname());
+            title.setText(pta.getName()+" "+pta.getSurname());
             Calendar cal1 = Calendar.getInstance();
             cal1.setTime(pta.getStart_date());
             start.setVisibility(View.VISIBLE);
             start.setText(format1.format(cal1.getTime()));
             Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(pta.getStart_date());
+            cal2.setTime(pta.getFinish_date());
             finish.setVisibility(View.VISIBLE);
             finish.setText(format1.format(cal2.getTime()));
             date.setText(pta.getSubject());

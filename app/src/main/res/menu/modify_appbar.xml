@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/cancel"
+        android:title=""
+        android:icon="@drawable/ic_baseline_close_24"
+        android:contentDescription="@string/cancelAll"
+        android:iconTint="@color/white"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+    <item
+        android:id="@+id/confirmEdit"
+        android:title=""
+        android:icon="@drawable/ic_baseline_check_24"
+        android:contentDescription="@string/cancelAll"
+        android:iconTint="@color/white"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+    <item
+        android:id="@+id/send"
+        android:title=""
+        android:icon="@drawable/ic_baseline_whatsapp_24"
+        android:contentDescription="@string/confirmAdd"
+        app:showAsAction="ifRoom"
+        android:visible="true"/>
+    <item
+        android:id="@+id/edit"
+        android:title=""
+        android:icon="@drawable/ic_baseline_mode_edit_24"
+        android:contentDescription="@string/confirmAdd"
+        app:showAsAction="ifRoom"
+        android:visible="true"/>
+</menu>

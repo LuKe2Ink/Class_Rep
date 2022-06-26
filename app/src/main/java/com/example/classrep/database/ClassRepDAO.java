@@ -52,7 +52,6 @@ public interface ClassRepDAO {
     List<Adhesion> getEventAdhesion(int id);
 
 
-
     //Query per entità Child
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -77,14 +76,17 @@ public interface ClassRepDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertEvent(Event...events);
 
+    @Query("SELECT * FROM event WHERE id_event = :id")
+    Event getSingleEvent(int id);
+
     @Query("SELECT * FROM event WHERE foreign_institute = :id")
     List<Event> getAllEvent(int id);
 
     @Query("SELECT * FROM event WHERE children = :child AND adhesions = :adhesion")
     List<Event> getFilteredEvent(boolean child, boolean adhesion);
 
-    @Query("DELETE FROM event WHERE id_event = :id")
-    void deleteEvent(int id);
+    @Query("DELETE FROM event WHERE id_event IN (:id)")
+    void deleteEvent(List<Integer> id);
 
     @Update
     void updateEvent(Event event);
@@ -130,11 +132,14 @@ public interface ClassRepDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMeeting(Meeting...Meeting);
 
+    @Query("SELECT * FROM meeting WHERE id_meeting = :id")
+    Meeting getSingleMeeting(int id);
+
     @Query("SELECT * FROM meeting WHERE foreign_institute = :id")
     List<Meeting> getAllMeeting(int id);
 
-    @Query("DELETE FROM meeting WHERE id_meeting = :id")
-    void deleteMeeting(int id);
+    @Query("DELETE FROM meeting WHERE id_meeting IN (:id)")
+    void deleteMeeting(List<Integer> id);
 
     @Query("UPDATE meeting SET report = :text")
     void updateReport(String text);
@@ -152,17 +157,17 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM parent WHERE foreign_event = :id")
     List<Parent> getEventParents(int id);
 
+    @Query("SELECT * FROM parent WHERE id_parent = :id")
+    List<Parent> getSingleParent(int id);
+
     @Query("SELECT * FROM parent WHERE foreign_pta = :id")
     List<Parent> getPTAmeetingParents(int id);
 
-    @Query("DELETE FROM parent WHERE id_parent = :id")
-    void deleteParent(int id);
+    @Query("DELETE FROM parent WHERE foreign_pta IN(:id)")
+    void deleteParentFromPta(List<Integer> id);
 
-    @Query("DELETE FROM parent WHERE foreign_pta = :id")
-    void deleteParentFromPta(int id);
-
-    @Query("DELETE FROM parent WHERE foreign_event = :id")
-    void deleteParentFromEvent(int id);
+    @Query("DELETE FROM parent WHERE foreign_event IN(:id)")
+    void deleteParentFromEvent(List<Integer> id);
 
     @Update
     void updateParent(Parent parent);
@@ -177,11 +182,20 @@ public interface ClassRepDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertPTAmeeting(PTAmeeting...ptameetings);
 
+    @Query("SELECT * FROM pta_meeting WHERE id_pta = :id")
+    PTAmeeting getSinglePta(int id);
+
     @Query("SELECT * FROM pta_meeting WHERE foreign_institute = :id")
     List<PTAmeeting> getAllPTAmeeting(int id);
 
+    @Query("DELETE FROM pta_meeting WHERE id_pta IN (:id)")
+    void deletePTAmeeting(List<Integer> id);
+
     @Update
     void updatePtaMeeting(PTAmeeting ptAmeeting);
+
+    @Query("SELECT MAX(id_pta) FROM pta_meeting")
+    int getMaxIdPta();
 
     //Query per entità Setting
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -192,4 +206,14 @@ public interface ClassRepDAO {
 
     @Update
     void updateSetting(Settings settings);
+
+    @Query("UPDATE setting SET color_App_bar = :color")
+    void updateColorSetting(int color);
+
+    @Query("UPDATE setting SET notification = :bool")
+    void updateNotificationSetting(boolean bool);
+
+    @Query("UPDATE setting SET last_notification = :bool")
+    void updateLastNotSetting(boolean bool);
+
 }

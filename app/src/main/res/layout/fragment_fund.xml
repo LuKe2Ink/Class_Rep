@@ -1,24 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawerLayoutFund"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/drawerFund"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        app:headerLayout="@layout/headerlayout"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu">
+
+    </com.google.android.material.navigation.NavigationView>
+
+<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.FundFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/AppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_700"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/selection_appbar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/fundAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/fund_bar"
+            app:title="Fondo Cassa"
+            app:navigationIcon="@drawable/ic_baseline_menu_24" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/prev3"
+            android:background="@drawable/border"
+            android:backgroundTint="@color/purple_500"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fondotinta"
+            android:layout_marginTop="32dp"
+            android:textAlignment="center"
+            android:text=" 40.00 € "
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/prev2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+40.00 €"
+            android:textAlignment="center"
+            android:textColor="#1ca212"
+            android:alpha="0.5"
+            android:textSize="50dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/prev1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cash"
+            app:layout_constraintVertical_bias="0.466" />
+
+        <TextView
+            android:id="@+id/prev1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="-40.00 €"
+            android:alpha="0.5"
+            android:textAlignment="center"
+            android:textColor="#Bf1e21"
+            android:textSize="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/prev2" />
+
+        <EditText
+            android:id="@+id/cash"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:hint="0.00€"
+            android:textAlignment="center"
+            android:textSize="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.191" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/casual"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginHorizontal="20sp"
+            android:hint="@string/casuale"
+            android:textColorHint="@color/purple_200"
+            app:boxStrokeColor="@color/purple_200"
+            app:boxStrokeWidth="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/prev1"
+            app:layout_constraintVertical_bias="0.13">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/casuality"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="84dp"
+                tools:layout_editor_absoluteY="116dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/addMoney"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="20sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="30dp"
+            app:iconTint="#1ca212"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cash"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.232" />
+
+        <Button
+            android:id="@+id/minusMoney"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="20sp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_baseline_horizontal_rule_24"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="30dp"
+            app:iconTint="#Bf1e21"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cash"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.232" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
