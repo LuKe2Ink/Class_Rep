@@ -10,10 +10,12 @@ import android.app.DatePickerDialog;
 import android.app.Person;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -47,6 +49,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -85,6 +90,7 @@ public class AddEventActivity extends AppCompatActivity {
     private Switch adhesionSwitch;
 
     private MaterialToolbar topAppbar;
+    private BlurView blurView;
 
     int item;
 
@@ -101,8 +107,6 @@ public class AddEventActivity extends AppCompatActivity {
 
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         item = singleToneClass.getData("institute");
-
-        Toast.makeText(this, String.valueOf(item), Toast.LENGTH_SHORT).show();
 
         ConstraintLayout layout = findViewById(R.id.expandableLayoutChild);
         layout.setVisibility(View.GONE);
@@ -121,6 +125,8 @@ public class AddEventActivity extends AppCompatActivity {
         adhesionSwitch = findViewById(R.id.adhesionSwitch);
 
         topAppbar = findViewById(R.id.eventTopAppBar);
+        blurView = findViewById(R.id.blurViewAddEvent);
+        backgroundBlur();
 
         title = findViewById(R.id.titolo);
         date = findViewById(R.id.giorno);
@@ -335,7 +341,7 @@ public class AddEventActivity extends AppCompatActivity {
             }
             if(isThereChild){
                 for (int i=0; i<children.size(); i++){
-                    View view = recycleParent.getChildAt(i);
+                    View view = recycleChild.getChildAt(i);
                     EditText nome = view.findViewById(R.id.nome);
                     EditText cognome = view.findViewById(R.id.cognome);
                     int maxidChild = db.ClassRepDAO().getMaxIdChild()+1;
@@ -344,7 +350,7 @@ public class AddEventActivity extends AppCompatActivity {
                 }
             }
             if(isThereAdhesion){
-                View view = recycleParent.getChildAt(0);
+                View view = recycleAdhesion.getChildAt(0);
                 EditText cognome = view.findViewById(R.id.cognome);
                 db.ClassRepDAO().insertAdhesion(new Adhesion(maxid,
                         Double.parseDouble(cognome.getText().toString())));
@@ -376,5 +382,23 @@ public class AddEventActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("fragment", "event");
         startActivity(intent);
+    }
+
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }

@@ -2,6 +2,7 @@ package com.example.classrep.fragment;
 
 import android.content.AsyncQueryHandler;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
+
 public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
 
     private PtaAdapter adapter;
@@ -51,6 +55,7 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
     private View view;
     private MaterialToolbar topAppbar;
     private FloatingActionButton add;
+    private BlurView blurView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -65,6 +70,9 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
         recycle = view.findViewById(R.id.recyclerViewHome);
         topAppbar = view.findViewById(R.id.topAppBarHome);
         add = view.findViewById(R.id.addHome);
+
+        blurView = view.findViewById(R.id.blurViewFragment);
+        backgroundBlur();
 
         AsyncTask.execute(()->{
             ptaMeetings = db.ClassRepDAO().getAllPTAmeeting(singleToneClass.getData("institute"));
@@ -210,5 +218,22 @@ public class PTAFragment extends Fragment implements PtaAdapter.onPtaListener{
 
 
         add.setImageResource(boo ? R.drawable.ic_open_trashcan : R.drawable.ic_baseline_add_24);
+    }
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getActivity().getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(getContext()))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }

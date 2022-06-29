@@ -3,12 +3,15 @@ package com.example.classrep;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.AsyncQueryHandler;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Event;
+import com.example.classrep.database.entity.Fund;
+import com.example.classrep.database.entity.FundChronology;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.fragment.CalendarFragment;
@@ -40,8 +43,8 @@ public class HomeActivity extends AppCompatActivity {
 
         if(intent.getStringExtra("fragment").contains("calendar")){
             callCalendarFragment();
-        } else if(intent.getStringExtra("fragment").contains("fund")){
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new FundFragment()).commit();
+        } else if(intent.getStringExtra("fragment").contains("fund")){Bundle bundle= new Bundle();
+            callFundFragment();
         } else if(intent.getStringExtra("fragment").contains("pta")){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new PTAFragment()).commit();
         } else if(intent.getStringExtra("fragment").contains("meeting")){
@@ -57,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             item.setChecked(true);
                 switch(item.getItemId()){
                     case R.id.fund:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new FundFragment()).commit();
+                        callFundFragment();
                         break;
                     case R.id.pta:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new PTAFragment()).commit();
@@ -102,6 +105,23 @@ public class HomeActivity extends AppCompatActivity {
             CalendarFragment calendarFragment = new CalendarFragment();
             calendarFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, calendarFragment).commit();
+        });
+    }
+
+    public void callFundFragment(){
+        AsyncTask.execute(()->{
+
+            Bundle bundle= new Bundle();
+            Fund fund = db.ClassRepDAO().getFund(institute_id);
+            List<FundChronology> fundChronologies = db.ClassRepDAO().getLastTwoChronology(fund.getId_fund());
+            String jsFundChron = new Gson().toJson(fundChronologies);
+            bundle.putString("funds", jsFundChron);
+            String jsFund = new Gson().toJson(fund);
+            bundle.putString("fund", jsFund);
+
+            FundFragment fundFragment = new FundFragment();
+            fundFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, fundFragment).commit();
         });
     }
 }

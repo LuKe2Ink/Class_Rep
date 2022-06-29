@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splashscreen"
     tools:context=".adder.AddPtaActivity">
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurViewAddPta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBarLayout"
@@ -21,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/add_appbar"
-            app:title="" />
+            app:title="Aggiungi un colloquio" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,7 +57,7 @@
                 app:layout_constraintHorizontal_bias="0.095"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:textColorHint="@color/purple_700"
+                android:textColorHint="@color/purple_200"
                 app:boxStrokeColor="@color/purple_500"
                 app:boxStrokeWidth="2dp">
 
@@ -72,7 +81,7 @@
                 app:layout_constraintHorizontal_bias="0.095"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nameProf"
-                android:textColorHint="@color/purple_700"
+                android:textColorHint="@color/purple_200"
                 app:boxStrokeColor="@color/purple_500"
                 app:boxStrokeWidth="2dp">
 
@@ -96,7 +105,7 @@
                 app:layout_constraintHorizontal_bias="0.095"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/surnameProf"
-                android:textColorHint="@color/purple_700"
+                android:textColorHint="@color/purple_200"
                 app:boxStrokeColor="@color/purple_500"
                 app:boxStrokeWidth="2dp">
 
@@ -130,7 +139,7 @@
                     android:layout_marginHorizontal="20sp"
                     android:layout_marginTop="30sp"
                     android:hint="@string/oraInizio"
-                    android:textColorHint="@color/purple_700"
+                    android:textColorHint="@color/purple_200"
                     app:boxStrokeColor="@color/purple_500"
                     app:boxStrokeWidth="2dp">
 
@@ -153,7 +162,7 @@
                     android:layout_marginHorizontal="20sp"
                     android:layout_marginTop="30sp"
                     android:hint="@string/oraFine"
-                    android:textColorHint="@color/purple_700"
+                    android:textColorHint="@color/purple_200"
                     app:boxStrokeColor="@color/purple_500"
                     app:boxStrokeWidth="2dp">
 
@@ -180,7 +189,7 @@
                 app:layout_constraintHorizontal_bias="0.095"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                android:textColorHint="@color/purple_700"
+                android:textColorHint="@color/purple_200"
                 app:boxStrokeColor="@color/purple_500"
                 app:boxStrokeWidth="2dp">
 
@@ -217,6 +226,8 @@
                         android:layout_marginTop="15dp"
                         android:text="Aggiungi Genitore"
                         android:textSize="20sp"
+                        android:textColor="@color/white"
+                        android:background="@color/nero_opaco"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.498"
@@ -260,7 +271,7 @@
                             app:icon="@drawable/ic_baseline_add_24"
                             app:iconGravity="textStart"
                             app:iconPadding="0dp"
-                            app:iconTint="@color/purple_700"
+                            app:iconTint="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -273,4 +284,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+    </eightbitlab.com.blurview.BlurView>
 </androidx.constraintlayout.widget.ConstraintLayout>

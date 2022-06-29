@@ -25,7 +25,7 @@
     <string name="oraFine">Ora fine</string>
     <string name="materie">Materie</string>
     <string name="cognomeprof">Cognome Prof.</string>
-    <string name="casuale">Casuale</string>
+    <string name="casuale">Causale</string>
     <string name="open">Drawer open</string>
     <string name="close">Drawer Closed</string>
 </resources>

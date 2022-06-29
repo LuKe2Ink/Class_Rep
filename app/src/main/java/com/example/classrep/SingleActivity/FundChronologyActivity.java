@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
@@ -71,9 +72,24 @@ public class FundChronologyActivity extends AppCompatActivity {
 
             createRecycler();
         });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FundChronologyActivity.this, HomeActivity.class);
+                intent.putExtra("fragment", "fund");
+                FundChronologyActivity.this.startActivity(intent);
+            }
+        });
     }
     private void createRecycler() {
         adapter = new FundChronologyAdapter(this, fundChronologies);
         this.runOnUiThread(()->recycle.setAdapter(adapter));
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("fragment", "fund");
+        startActivity(intent);
     }
 }

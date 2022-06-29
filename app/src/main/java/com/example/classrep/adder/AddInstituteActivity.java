@@ -28,6 +28,7 @@ import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
 import com.example.classrep.SelectionActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Fund;
 import com.example.classrep.database.entity.Institute;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -111,7 +112,9 @@ public class AddInstituteActivity extends AppCompatActivity {
             }
 
             AsyncTask.execute(()->{
+                int fundId = db.ClassRepDAO().getMaxFund()+1;
                 db.ClassRepDAO().insertInstitute(new Institute(institute_index, instituteName, instituteGrade, fileUriString, Date.from(Calendar.getInstance().toInstant())));
+                db.ClassRepDAO().insertFund(new Fund(fundId, institute_index, 0.00));
                 Intent intent = new Intent(getBaseContext(), SelectionActivity.class);
                 startActivity(intent);
             });

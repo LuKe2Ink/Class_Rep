@@ -1,60 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/drawerLayoutFund"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:fitsSystemWindows="true">
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/drawerFund"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        app:headerLayout="@layout/headerlayout"
-        android:layout_gravity="start"
-        app:menu="@menu/drawer_menu">
-
-    </com.google.android.material.navigation.NavigationView>
-
-<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splashscreen"
+    android:fitsSystemWindows="true"
     tools:context=".fragment.FundFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/AppBarLayout"
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurViewFund"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/purple_700"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/selection_appbar">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/fundAppBar"
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/AppBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/fund_bar"
-            app:title="Fondo Cassa"
-            app:navigationIcon="@drawable/ic_baseline_menu_24" />
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_700"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/selection_appbar">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/fundAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/fund_bar"
+                app:title="Fondo Cassa"
+                app:navigationIcon="@drawable/ic_baseline_menu_24" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawerLayoutFund"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/drawerFund"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:headerLayout="@layout/headerlayout"
+            android:layout_gravity="start"
+            app:menu="@menu/drawer_menu">
+
+        </com.google.android.material.navigation.NavigationView>
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <TextView
-            android:id="@+id/prev3"
+            android:id="@+id/fundMoney"
             android:background="@drawable/border"
-            android:backgroundTint="@color/purple_500"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -68,13 +77,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/prev2"
+            android:id="@+id/prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+40.00 €"
             android:textAlignment="center"
-            android:textColor="#1ca212"
-            android:alpha="0.5"
+            android:alpha="0.7"
+            android:background="@color/black"
             android:textSize="50dp"
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toTopOf="@+id/prev1"
@@ -90,28 +99,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="-40.00 €"
-            android:alpha="0.5"
+            android:alpha="0.7"
+            android:background="@color/black"
             android:textAlignment="center"
-            android:textColor="#Bf1e21"
             android:textSize="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prev2" />
+            app:layout_constraintTop_toBottomOf="@+id/prev" />
 
         <EditText
             android:id="@+id/cash"
             android:layout_width="200dp"
             android:layout_height="80dp"
+            android:background="@color/nero_opaco"
             android:hint="0.00€"
             android:textAlignment="center"
             android:textSize="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.511"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.191" />
+            app:layout_constraintTop_toBottomOf="@+id/fundMoney"
+            app:layout_constraintVertical_bias="0.07" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/casual"
@@ -174,6 +184,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.232" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.drawerlayout.widget.DrawerLayout>
+    </eightbitlab.com.blurview.BlurView>
 </FrameLayout>
-
-</androidx.drawerlayout.widget.DrawerLayout>

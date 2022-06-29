@@ -25,11 +25,24 @@ public class Settings {
     @ColumnInfo(name = "last_notification")
     private boolean last_notification;
 
-    public Settings(int foreign_institute, int color_App_bar, boolean notification, boolean last_notification) {
+    @ColumnInfo(name="background_image")
+    private String image;
+
+
+    public Settings(int foreign_institute, int color_App_bar, boolean notification, boolean last_notification, String image) {
         this.foreign_institute = foreign_institute;
         this.color_App_bar = color_App_bar;
         this.notification = notification;
         this.last_notification = last_notification;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public int getColor_App_bar() {

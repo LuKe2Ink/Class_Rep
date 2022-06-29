@@ -4,7 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splashscreen"
     tools:context=".adder.AddPtaActivity">
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurViewPta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBarLayout"
@@ -21,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/modify_appbar"
-            app:title="" />
+            app:title="Modifica il colloquio" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -221,6 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
+                        android:textColor="@color/white"
                         android:text="Genitori"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -283,4 +294,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+    </eightbitlab.com.blurview.BlurView>
 </androidx.constraintlayout.widget.ConstraintLayout>

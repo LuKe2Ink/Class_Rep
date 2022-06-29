@@ -7,10 +7,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -39,6 +41,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
+
 public class AddMeetingActivity extends AppCompatActivity {
 
     private ClassRepDB db;
@@ -48,6 +53,7 @@ public class AddMeetingActivity extends AppCompatActivity {
     private TextInputEditText date;
     private TextInputEditText place;
     private TextInputEditText note;
+    private TextInputEditText report;
 
     private Chip chipScolastico;
     private Chip chipExtaScolastico;
@@ -58,7 +64,7 @@ public class AddMeetingActivity extends AppCompatActivity {
 
 
     private MaterialToolbar topAppbar;
-
+    private BlurView blurView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -71,11 +77,14 @@ public class AddMeetingActivity extends AppCompatActivity {
         item = singleToneClass.getData("institute");
 
         db = ClassRepDB.getDatabase(AddMeetingActivity.this);
+        blurView = findViewById(R.id.blurViewAddMeeting);
+        backgroundBlur();
 
         title = findViewById(R.id.titoloMeeting);
         place = findViewById(R.id.postoMeeting);
         note = findViewById(R.id.notaMeeting);
         date = findViewById(R.id.giornoMeeting);
+        report = findViewById(R.id.reportMeet);
 
         date.setOnClickListener(view ->{
             DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -185,7 +194,7 @@ public class AddMeetingActivity extends AppCompatActivity {
                 Date data = new SimpleDateFormat("dd/MM/yyyy").parse(date.getText().toString());
                 System.out.println(data);
                 meeting = new Meeting(maxid, item, title.getText().toString(), tipo, data
-                        , place.getText().toString(),note.getText().toString());
+                        , place.getText().toString(),note.getText().toString(), report.getText().toString());
                 db.ClassRepDAO().insertMeeting(meeting);
             } catch (ParseException e) {
                 System.out.println(e);
@@ -215,5 +224,22 @@ public class AddMeetingActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("fragment", "meeting");
         startActivity(intent);
+    }
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }

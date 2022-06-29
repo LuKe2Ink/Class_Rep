@@ -37,6 +37,8 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
     private List<Parent> parents = new ArrayList<>();
     private List<Child> children = new ArrayList<>();
     private List<Adhesion> adhesion = new ArrayList<>();
+    private List<Integer> removedParent = new ArrayList<>();
+    private List<Integer> removedChild = new ArrayList<>();
     private Context context;
     private String type;
     private boolean singleOrAdd;
@@ -66,6 +68,16 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         this.singleOrAdd = bool;
     }
 
+    public List<Integer> getRemovedParent(){
+        return removedParent;
+    }
+    public List<Integer> getRemovedChild(){
+        return removedChild;
+    }
+    public void clearList(){
+        removedParent.clear();
+        removedChild.clear();
+    }
 
 
     @Override
@@ -86,7 +98,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         if(!parents.isEmpty()){
             return parents.size();
         } else if(!children.isEmpty()){
-            return parents.size();
+            return children.size();
         } else if(!adhesion.isEmpty()){
             return adhesion.size();
         }
@@ -179,7 +191,18 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
             });
 
             delete.setOnClickListener(view ->{
-                people.remove(ciao);
+                if (!parents.isEmpty()){
+                    removedParent.add(parents.get(ciao).getId_parent());
+                    parents.remove(ciao);
+                } else if(!children.isEmpty()){
+                    removedChild.add(children.get(ciao).getId_child());
+                    children.remove(ciao);
+                } else if(!adhesion.isEmpty()){
+                    adhesion.remove(ciao);
+                } else {
+                    people.remove(ciao);
+                }
+
                 notifyDataSetChanged();
                 if(type.contains("adhesion")){
                     Button button = ((Activity) context).findViewById(R.id.addAdhesion);

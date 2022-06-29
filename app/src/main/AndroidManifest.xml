@@ -16,6 +16,7 @@
         android:theme="@style/Theme.ClassRep">
         <activity
             android:name=".ProfileActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
@@ -23,30 +24,37 @@
         <activity
             android:name=".adder.AddPtaActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".adder.AddMeetingActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".adder.AddEventActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SingleActivity.FundChronologyActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SingleActivity.PtaActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SingleActivity.EventActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SingleActivity.MeetingActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".HomeActivity"
@@ -70,6 +78,7 @@
         <activity
             android:name=".adder.AddInstituteActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SelectionActivity"

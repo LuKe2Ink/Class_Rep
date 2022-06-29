@@ -47,7 +47,7 @@ public class Meeting {
     @ColumnInfo(name = "report")
     private String report;
 
-    public Meeting(int id_meeting, int foreign_institute, String title, String type, Date date, String place, String note) {
+    public Meeting(int id_meeting, int foreign_institute, String title, String type, Date date, String place, String note, String report) {
         this.id_meeting = id_meeting;
         this.foreign_institute = foreign_institute;
         this.title = title;
@@ -55,6 +55,7 @@ public class Meeting {
         this.date = date;
         this.place = place;
         this.note=note;
+        this.report = report;
     }
 
     public int getForeign_institute() {
@@ -128,8 +129,8 @@ public class Meeting {
                 +this.getType()+"\n"
                 +dateFormat.format(this.getDate())+"\n"
                 +this.getPlace()+"\n"
-                +this.getNote()+"\n"
-                +this.getReport()+"\n";
+                +this.getNote()+"\n\n"
+                +"Verbale: "+this.getReport()+"\n";
         return testo;
     }
 }

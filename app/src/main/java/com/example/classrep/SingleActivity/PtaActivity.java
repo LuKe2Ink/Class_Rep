@@ -9,22 +9,26 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
 import com.example.classrep.adapter.PersonAdapter;
 import com.example.classrep.adapter.PtaAdapter;
 import com.example.classrep.adder.AddPtaActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Child;
 import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.database.entity.Parent;
@@ -43,6 +47,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class PtaActivity extends AppCompatActivity {
 
@@ -73,6 +80,7 @@ public class PtaActivity extends AppCompatActivity {
     int maxidParent;
 
     private boolean modify = false;
+    private BlurView blurView;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -83,6 +91,9 @@ public class PtaActivity extends AppCompatActivity {
         AsyncTask.execute(()->{
             maxidParent = db.ClassRepDAO().getMaxIdParent()+1;
         });
+
+        blurView = findViewById(R.id.blurViewPta);
+        backgroundBlur();
 
         recycleParent = findViewById(R.id.putParent);
 
@@ -115,6 +126,24 @@ public class PtaActivity extends AppCompatActivity {
         setAll();
 
         addButton.setOnClickListener( view ->{
+            for(int i= 0; i<parents.size(); i++){
+                View view1 = recycleParent.getChildAt(i);
+                EditText nomeGenitore = view1.findViewById(R.id.nome);
+                EditText cognomeGenitore = view1.findViewById(R.id.cognome);
+                EditText orarioGenitore = view1.findViewById(R.id.time);
+                parents.get(i).setName(nomeGenitore.getText().toString());
+                parents.get(i).setSurname(cognomeGenitore.getText().toString());
+                String stringa = orarioGenitore.getText().toString();
+                try {
+                    if(stringa.isEmpty()){
+                        parents.get(i).setTime(new SimpleDateFormat("HH:mm").parse("00:00"));
+                    } else {
+                        parents.get(i).setTime(new SimpleDateFormat("HH:mm").parse(stringa));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
             parents.add(new  Parent(maxidParent, 0, pta.getId_pta(), "", "", Date.from(Calendar.getInstance().toInstant())));
             adapter.notifyDataSetChanged();
         });
@@ -220,7 +249,7 @@ public class PtaActivity extends AppCompatActivity {
                     MenuItem edit = toolbar.getMenu().findItem(R.id.edit);
                     edit.setVisible(true);
                     MenuItem send1 = toolbar.getMenu().findItem(R.id.send);
-                    send1.setVisible(false);
+                    send1.setVisible(true);
 
                     addButton.setVisibility(View.GONE);
                     nome.setEnabled(false);
@@ -238,14 +267,16 @@ public class PtaActivity extends AppCompatActivity {
                     MenuItem edit1 = toolbar.getMenu().findItem(R.id.edit);
                     edit1.setVisible(true);
                     MenuItem send2 = toolbar.getMenu().findItem(R.id.send);
-                    send2.setVisible(false);
+                    send2.setVisible(true);
                     modify = false;
                     modifyEnable(modify);
 
                     AsyncTask.execute(()->{
                         System.out.println(isAllOk());
-                        System.out.println(verifyDate());
-                        if(isAllOk() && verifyDate()){
+                        if(isAllOk()){
+                            List<Integer> idGenitori = adapter.getRemovedParent();
+                            db.ClassRepDAO().deleteParents(idGenitori);
+                            adapter.clearList();
                             PTAmeeting substitute = createPta();
                             if(substitute.getName()!=pta.getName()
                                     ||substitute.getSurname()!=pta.getSurname()
@@ -268,12 +299,10 @@ public class PtaActivity extends AppCompatActivity {
                                                 || parents.get(i).getSurname() != cognomeGenitore.getText().toString()
                                                 || parents.get(i).getTime().equals(new SimpleDateFormat("HH:mm").parse(orarioGenitore.getText().toString())))
                                         {
-                                            System.out.println(i);
                                             parents.get(i).setName(nomeGenitore.getText().toString());
                                             parents.get(i).setSurname(cognomeGenitore.getText().toString());
                                             parents.get(i).setTime(new SimpleDateFormat("HH:mm").parse(orarioGenitore.getText().toString()));
                                             db.ClassRepDAO().updateParent(parents.get(i));
-                                            System.out.println(i);
                                         }
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -296,9 +325,6 @@ public class PtaActivity extends AppCompatActivity {
                                                     new SimpleDateFormat("HH:mm").parse(ora));
                                             db.ClassRepDAO().insertParent(parente);
                                             parents.set(i,parente);
-                                            this.runOnUiThread(()->{
-                                                adapter.notifyDataSetChanged();
-                                            });
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }
@@ -306,6 +332,20 @@ public class PtaActivity extends AppCompatActivity {
                                 }
                             }
                         }
+                        this.runOnUiThread(()->{
+                            for (int l =0; l<parents.size(); l++){
+                                View view1 = recycleParent.getChildAt(l);
+                                EditText nome = view1.findViewById(R.id.nome);
+                                nome.setFocusable(false);
+                                EditText cognome = view1.findViewById(R.id.cognome);
+                                cognome.setFocusable(false);
+                                EditText orario = view1.findViewById(R.id.time);
+                                orario.setFocusable(false);
+                                Button delete = view1.findViewById(R.id.trashPerson);
+                                delete.setVisibility(View.GONE);
+                            }
+                            adapter.notifyDataSetChanged();
+                        });
                         this.runOnUiThread(()->{setAll();});
                     });
                     break;
@@ -316,7 +356,6 @@ public class PtaActivity extends AppCompatActivity {
 
 
     private void createRecycler() {
-        System.out.println(parents);
         adapter = new PersonAdapter(getBaseContext(), "parent", true);
         adapter.addParents(parents);
         adapter.notifyDataSetChanged();
@@ -372,54 +411,17 @@ public class PtaActivity extends AppCompatActivity {
 
             this.runOnUiThread(()->{new androidx.appcompat.app.AlertDialog.Builder(PtaActivity.this)
                     .setTitle("Non hai inserito nessun genitore")
-                    .setMessage("Vuoi comunque aggiungere l'evento?")
+                    .setMessage("")
                     //se clicca ok
-                    .setPositiveButton("Si", (dialog, which)->{
-                        rispostona = true;
-                    })
-                    .setNegativeButton("No", null)
+                    .setPositiveButton("ok",null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .create()
                     .show();});
+            rispostona = true;
         } else {
             rispostona = true;
         }
         return rispostona;
-    }
-
-    boolean risposta;
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean verifyDate(){
-        risposta = false;
-        Instant instatNow = Calendar.getInstance().toInstant();
-        Instant instatTaken = null;
-        try {
-            instatTaken = new SimpleDateFormat("dd/MM/yyyy").parse(date.getText().toString()).toInstant();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println(instatNow);
-        System.out.println(instatTaken);
-        System.out.println(instatNow.isAfter(instatTaken));
-        if(instatNow.isAfter(instatTaken)){
-            this.runOnUiThread(()->{
-                new androidx.appcompat.app.AlertDialog.Builder(PtaActivity.this)
-                    .setTitle("La data inserita è prima di quella odierna")
-                    .setMessage("Vuoi comunque aggiungere l'evento?")
-                    //se clicca ok
-                    .setPositiveButton("Si", (dialog, which)->{
-                        risposta = true;
-                    })
-                    .setNegativeButton("No", null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .create()
-                    .show();
-            });
-        } else {
-            risposta = true;
-        }
-
-        return risposta;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -454,10 +456,28 @@ public class PtaActivity extends AppCompatActivity {
                 Date.from(calendarioFine.toInstant()),
                 materie.getText().toString());
     }
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
+    }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, PTAFragment.class);
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("fragment", "pta");
         startActivity(intent);
     }
 }

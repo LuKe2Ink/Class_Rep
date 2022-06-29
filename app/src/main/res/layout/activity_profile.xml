@@ -54,7 +54,8 @@
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cambia il colore della barra"
+        android:text="Cambia l'immagine di sfondo"
+        android:backgroundTint="?attr/colorOnPrimary"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +72,7 @@
         android:layout_marginEnd="30dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
+        android:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changeColor">
@@ -86,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notifiche"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/adhesionSwitch"
@@ -107,6 +110,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:backgroundTint="?attr/colorOnPrimary"
         android:layout_marginTop="50dp"
         android:id="@+id/cardnotifyYear"
         android:layout_width="match_parent"
@@ -131,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:text="Notifiche fine Anno"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/nruhone"
                 app:layout_constraintStart_toStartOf="parent"

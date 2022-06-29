@@ -1,6 +1,7 @@
 package com.example.classrep.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,10 +20,13 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.example.classrep.R;
+import com.example.classrep.SingleActivity.EventActivity;
+import com.example.classrep.SingleActivity.PtaActivity;
 import com.example.classrep.adapter.EventAdapter;
 import com.example.classrep.adapter.MeetingAdapter;
 import com.example.classrep.adder.AddEventActivity;
 import com.example.classrep.database.ClassRepDB;
+import com.example.classrep.database.entity.Adhesion;
 import com.example.classrep.database.entity.Child;
 import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.PTAmeeting;
@@ -30,12 +34,16 @@ import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class EventFragment extends Fragment implements EventAdapter.onEventListener {
 
@@ -55,6 +63,7 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
     private View view;
     private MaterialToolbar topAppbar;
     private FloatingActionButton add;
+    private BlurView blurView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -68,6 +77,9 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
         recycle = view.findViewById(R.id.recyclerViewHome);
         topAppbar = view.findViewById(R.id.topAppBarHome);
         add = view.findViewById(R.id.addHome);
+
+        blurView = view.findViewById(R.id.blurViewFragment);
+        backgroundBlur();
 
         AsyncTask.execute(()->{
             events = db.ClassRepDAO().getAllEvent(singleToneClass.getData("institute"));
@@ -181,8 +193,21 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
 
             singleToneClass.setData("event", item);
 
-//            Intent intent = new Intent(this, SingleMeetingActivity.class);
-//            startActivity(intent);
+            AsyncTask.execute(()->{
+                Intent intent = new Intent(getContext(), EventActivity.class);
+                List<Parent> parents = db.ClassRepDAO().getEventParents(item);
+                String jsParent = new Gson().toJson(parents);
+                intent.putExtra("parents", jsParent);
+                List<Child> children = db.ClassRepDAO().getEventChildren(item);
+                String jsChild = new Gson().toJson(children);
+                intent.putExtra("children", jsChild);
+                List<Adhesion> adhesions = db.ClassRepDAO().getEventAdhesion(item);
+                String hsAdhesion = new Gson().toJson(adhesions);
+                intent.putExtra("adhesion", hsAdhesion);
+                String jsEvent = new Gson().toJson(db.ClassRepDAO().getSingleEvent(item));
+                intent.putExtra("event", jsEvent);
+                startActivity(intent);
+            });
         }
     }
 
@@ -204,5 +229,23 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
 
 
         add.setImageResource(boo ? R.drawable.ic_open_trashcan : R.drawable.ic_baseline_add_24);
+    }
+
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getActivity().getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(getContext()))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }

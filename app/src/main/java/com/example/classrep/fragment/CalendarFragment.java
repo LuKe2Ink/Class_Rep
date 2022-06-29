@@ -1,6 +1,7 @@
 package com.example.classrep.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -40,6 +41,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
+
 
 public class CalendarFragment extends Fragment implements OnNavigationButtonClickedListener {
     private CustomCalendar customCalendar;
@@ -62,6 +66,8 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
     private View view;
 
     private Map<Integer, Object> mappaRecycler = new HashMap<>();
+    private BlurView blurView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +82,9 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
 
         customCalendar=view.findViewById(R.id.custom_calendar);
 
-        Intent intent = this.getActivity().getIntent();
+        blurView = view.findViewById(R.id.blurViewCalendar);
+        backgroundBlur();
+
         String jsEvent;
         String jsMeet;
         String jsPta;
@@ -308,4 +316,22 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
         arr[1] = null;
         return arr;
     }
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getActivity().getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(getContext()))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
+    }
+
 }

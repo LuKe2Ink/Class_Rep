@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities =
             {Institute.class, Adhesion.class, Child.class, Event.class, Fund.class, FundChronology.class, Meeting.class, Parent.class, PTAmeeting.class, Settings.class}
-             , version = 1, exportSchema = false)
+             , version = 3, exportSchema = false)
 public abstract class ClassRepDB extends RoomDatabase {
 
     public abstract ClassRepDAO ClassRepDAO();

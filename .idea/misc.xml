@@ -22,13 +22,14 @@
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_istitute.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_meeting.xml" value="0.40451745379876797" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_add_pta.xml" value="0.33" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_event.xml" value="0.3958333333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_fund_chronology.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_home.xml" value="0.3048973143759874" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_meeting.xml" value="0.36666666666666664" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_meeting.xml" value="0.2" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_profile.xml" value="0.25" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_pta.xml" value="0.20520833333333333" />
-        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_selection.xml" value="0.20520833333333333" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_selection.xml" value="0.30637636080870917" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/adapter_event.xml" value="0.3342391304347826" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/layout/adapter_home_layout.xml" value="0.5" />
@@ -62,7 +63,7 @@
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/drawer_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/fund_bar.xml" value="0.33" />
-        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/modify_appbar.xml" value="0.67" />
+        <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/modify_appbar.xml" value="0.5" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/menu/selection_appbar.xml" value="0.20520833333333333" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
         <entry key="..\:/Git repository/CLass_rep/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22135416666666666" />

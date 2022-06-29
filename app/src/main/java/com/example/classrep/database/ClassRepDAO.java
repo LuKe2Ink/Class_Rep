@@ -104,6 +104,12 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM fund WHERE foreign_institute = :id")
     Fund getFund(int id);
 
+    @Update
+    void updateFund(Fund...fund);
+
+    @Query("SELECT MAX(id_fund) FROM fund")
+    int getMaxFund();
+
 
 
     //Query per entità FundChronology
@@ -113,6 +119,9 @@ public interface ClassRepDAO {
 
     @Query("SELECT * FROM fund_chronology WHERE foreign_fund = :id")
     List<FundChronology> getAllFundChronology(int id);
+
+    @Query("SELECT * FROM fund_chronology WHERE foreign_fund = :id ORDER BY date DESC LIMIT 2")
+    List<FundChronology> getLastTwoChronology(int id);
 
     @Query("SELECT * FROM fund_chronology WHERE foreign_fund = :id AND date BETWEEN :start_date AND :finish_date")
     @TypeConverters({DataConverter.class})
@@ -126,6 +135,8 @@ public interface ClassRepDAO {
     @TypeConverters({DataConverter.class})
     List<FundChronology> getFilteredFund(int id, String type, Date start_date, Date finish_date);
 
+    @Query("SELECT MAX(id_funcChron) FROM fund_chronology")
+    int getMaxFundChron();
 
     //Query per entità Meeting
 
@@ -140,6 +151,9 @@ public interface ClassRepDAO {
 
     @Query("DELETE FROM meeting WHERE id_meeting IN (:id)")
     void deleteMeeting(List<Integer> id);
+
+    @Update
+    void updateMeeting(Meeting...meeting);
 
     @Query("UPDATE meeting SET report = :text")
     void updateReport(String text);
@@ -168,6 +182,9 @@ public interface ClassRepDAO {
 
     @Query("DELETE FROM parent WHERE foreign_event IN(:id)")
     void deleteParentFromEvent(List<Integer> id);
+
+    @Query("DELETE FROM parent WHERE id_parent IN (:id)")
+    void deleteParents(List<Integer> id);
 
     @Update
     void updateParent(Parent parent);

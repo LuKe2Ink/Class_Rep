@@ -9,10 +9,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -43,6 +45,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
+
 public class AddPtaActivity extends AppCompatActivity {
 
 
@@ -72,6 +77,7 @@ public class AddPtaActivity extends AppCompatActivity {
     int minutes;
     int hours1;
     int minutes1;
+    private BlurView blurView;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -80,6 +86,7 @@ public class AddPtaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_pta);
 
         db = ClassRepDB.getDatabase(AddPtaActivity.this);
+        blurView = findViewById(R.id.blurViewAddPta);
 
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         item = singleToneClass.getData("institute");
@@ -321,5 +328,23 @@ public class AddPtaActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("fragment", "pta");
         startActivity(intent);
+    }
+
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }
