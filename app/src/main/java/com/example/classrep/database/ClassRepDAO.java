@@ -41,6 +41,9 @@ public interface ClassRepDAO {
     @Query("SELECT MAX(id_institute) FROM institute")
     int getMaxIdInstitute();
 
+    @Update
+    void updateInstitute(Institute institute);
+
 
 
     //Query per entità Adhesion
@@ -51,6 +54,12 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM adhesion WHERE foreign_event = :id")
     List<Adhesion> getEventAdhesion(int id);
 
+    @Query(("DELETE FROM adhesion WHERE foreign_event = :id"))
+    void deleteAdhesion(int id);
+
+    @Update
+    void updateAdhesion(Adhesion adhesion);
+
 
     //Query per entità Child
 
@@ -60,8 +69,11 @@ public interface ClassRepDAO {
     @Query("SELECT * FROM child WHERE foreign_event = :id")
     List<Child> getEventChildren(int id);
 
-    @Query("DELETE FROM child WHERE id_child = :id")
-    void deleteChild(int id);
+    @Query("SELECT * FROM child WHERE id_child = :id")
+    List<Child> getSingleChild(int id);
+
+    @Query("DELETE FROM child WHERE id_child IN (:id)")
+    void deleteChild(List<Integer> id);
 
     @Update
     void updateChild(Child child);
@@ -223,14 +235,5 @@ public interface ClassRepDAO {
 
     @Update
     void updateSetting(Settings settings);
-
-    @Query("UPDATE setting SET color_App_bar = :color")
-    void updateColorSetting(int color);
-
-    @Query("UPDATE setting SET notification = :bool")
-    void updateNotificationSetting(boolean bool);
-
-    @Query("UPDATE setting SET last_notification = :bool")
-    void updateLastNotSetting(boolean bool);
 
 }

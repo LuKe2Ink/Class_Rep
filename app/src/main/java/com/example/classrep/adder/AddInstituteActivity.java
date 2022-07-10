@@ -1,13 +1,19 @@
 package com.example.classrep.adder;
 
+import static com.example.classrep.utilities.NotificationService.NOTIFICATION_CHANNEL_ID;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -25,11 +31,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.classrep.HomeActivity;
+import com.example.classrep.MainActivity;
 import com.example.classrep.R;
 import com.example.classrep.SelectionActivity;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Fund;
 import com.example.classrep.database.entity.Institute;
+import com.example.classrep.database.entity.Settings;
+import com.example.classrep.utilities.NotificationService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -43,6 +52,7 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AddInstituteActivity extends AppCompatActivity {
+    private final static String default_notification_channel_id = "default" ;
 
     private int institute_index;
     private ClassRepDB db;
@@ -86,42 +96,81 @@ public class AddInstituteActivity extends AppCompatActivity {
             EditText editInstituteGrade = findViewById(R.id.editInstituteGrade);
             String instituteName = editInstituteName.getText().toString();
             String instituteGrade = editInstituteGrade.getText().toString();
-
-            if (!fileUriString.contains("nada")) {
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(fileUriString));
-                    ContextWrapper cw = new ContextWrapper(getApplicationContext());
-                    File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-                    File file = new File(directory, Calendar.getInstance().getTimeInMillis() + ".png");
-
-                    fileUriString = file.toURI().toString();
-
-                    if (!file.exists()) {
-                        Log.d("path", file.toString());
-                        FileOutputStream fos = null;
-                        fos = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                        fos.flush();
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if(instituteName.isEmpty() || instituteGrade.isEmpty()){
+                new androidx.appcompat.app.AlertDialog.Builder(AddInstituteActivity.this)
+                        .setTitle("Ci sono alcuni elementi mancanti")
+                        //se clicca ok
+                        .setPositiveButton(android.R.string.yes, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .create()
+                        .show();
             } else {
-                fileUriString = "nada";
-            }
+                if (!fileUriString.contains("nada")) {
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(fileUriString));
+                        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+                        File file = new File(directory, Calendar.getInstance().getTimeInMillis() + ".png");
 
-            AsyncTask.execute(()->{
-                int fundId = db.ClassRepDAO().getMaxFund()+1;
-                db.ClassRepDAO().insertInstitute(new Institute(institute_index, instituteName, instituteGrade, fileUriString, Date.from(Calendar.getInstance().toInstant())));
-                db.ClassRepDAO().insertFund(new Fund(fundId, institute_index, 0.00));
-                Intent intent = new Intent(getBaseContext(), SelectionActivity.class);
-                startActivity(intent);
-            });
+                        fileUriString = file.toURI().toString();
+
+                        if (!file.exists()) {
+                            Log.d("path", file.toString());
+                            FileOutputStream fos = null;
+                            fos = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                            fos.flush();
+                            fos.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    fileUriString = "nada";
+                }
+
+                AsyncTask.execute(()->{
+                    int fundId = db.ClassRepDAO().getMaxFund()+1;
+                    Calendar calendario = Calendar.getInstance();
+                    Date data = Date.from(calendario.toInstant());
+                    db.ClassRepDAO().insertInstitute(new Institute(institute_index, instituteName, instituteGrade, fileUriString, data));
+                    db.ClassRepDAO().insertFund(new Fund(fundId, institute_index, 0.00));
+                    db.ClassRepDAO().insertSettings(new Settings(institute_index, 5, true, true, "nada"));
+
+                    calendario.add(Calendar.YEAR, 1);
+                    scheduleNotification(getNotification() , Date.from(calendario.toInstant()).getTime()) ;
+
+                    Intent intent = new Intent(getBaseContext(), SelectionActivity.class);
+                    startActivity(intent);
+                });
+            }
         });
 
         imageView.setOnClickListener(view -> lunchPhoto());
 
+    }
+
+
+    private void scheduleNotification (Notification notification , long delay) {
+        Intent notificationIntent = new Intent( this, NotificationService.class ) ;
+        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 0 ) ;
+        notificationIntent.putExtra(NotificationService.NOTIFICATION , notification) ;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast ( this, 0 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT ) ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(getBaseContext().ALARM_SERVICE ) ;
+        assert alarmManager != null;
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP , delay , pendingIntent);
+    }
+    private Notification getNotification () {
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText("E' ormai passato un anno dalla creazione del tuo instituto, vai ad eliminarlo") ;
+        builder.setSmallIcon(R.drawable.logo) ;
+        builder.setAutoCancel( true ) ;
+        builder.setContentIntent(pendingIntent);
+        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/backgroundEvent"
     android:background="@drawable/splashscreen"
     tools:context=".adder.AddEventActivity">
 
@@ -169,7 +170,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
-                            android:text="Aggiungi Genitore"
+                            android:text="Genitori"
                             android:textSize="20sp"
                             android:background="@color/nero_opaco"
                             android:textColor="@color/white"
@@ -246,6 +247,7 @@
 
                         <TextView
                             android:id="@+id/child"
+                            android:background="@color/nero_opaco"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
@@ -335,6 +337,7 @@
 
                         <TextView
                             android:id="@+id/adhesion"
+                            android:background="@color/nero_opaco"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
@@ -383,7 +386,7 @@
                                 tools:listitem="@layout/adapter_people" />
 
                             <Button
-                                android:id="@+id/addAdhesionModify"
+                                android:id="@+id/addAdhesion"
                                 style="@style/Widget.Material3.Button.Icon"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

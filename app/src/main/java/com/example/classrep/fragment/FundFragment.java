@@ -1,8 +1,12 @@
 package com.example.classrep.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -18,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.classrep.ProfileActivity;
@@ -37,11 +43,13 @@ import com.google.gson.reflect.TypeToken;
 
 import org.w3c.dom.Text;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -62,6 +70,7 @@ public class FundFragment extends Fragment {
     private Button add;
     private Button minus;
     private BlurView blurView;
+    private SingleToneClass singleToneClass;
 
     private int addColor = Color.parseColor("#1ca212");
     private int minusColor = Color.parseColor("#Bf1e21");
@@ -74,6 +83,38 @@ public class FundFragment extends Fragment {
 
         db = ClassRepDB.getDatabase(this.getContext());
 
+        drawerLayout = view.findViewById(R.id.drawerLayoutFund);
+        drawer = view.findViewById(R.id.drawerFund);
+        drawer.bringToFront();
+
+        AsyncTask.execute(()->{
+            String image = db.ClassRepDAO().getInstitute(singleToneClass.getData("institute")).getImage();
+            if(!image.contains("nada")){
+                Uri uri = Uri.parse(image);
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+                CircleImageView immagine = hView.findViewById(R.id.headerIcon);
+                System.out.println(immagine);
+                immagine.setImageURI(uri);
+            } else {
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+            }
+        });
+
+        singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            FrameLayout background = view.findViewById(R.id.backgroundFund);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( this.getActivity().getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
+
         String jsFunds;
         jsFunds = getArguments().getString("funds");
 
@@ -85,10 +126,6 @@ public class FundFragment extends Fragment {
 
         Type listTypeEvent1 = new TypeToken<Fund>() {}.getType();
         fundDB = new Gson().fromJson(String.valueOf(jsFund), listTypeEvent1);
-
-        drawerLayout = view.findViewById(R.id.drawerLayoutFund);
-        drawer = view.findViewById(R.id.drawerFund);
-        drawer.bringToFront();
         toolbar = view.findViewById(R.id.fundAppBar);
         cash = view.findViewById(R.id.cash);
         fund = view.findViewById(R.id.fundMoney);
@@ -240,7 +277,7 @@ public class FundFragment extends Fragment {
 
         toolbar.setOnMenuItemClickListener(menuItem->{
 
-            SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
+            singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
             singleToneClass.setData("fund", fundDB.getId_fund());
 
             Intent intent = new Intent(this.getContext(), FundChronologyActivity.class);

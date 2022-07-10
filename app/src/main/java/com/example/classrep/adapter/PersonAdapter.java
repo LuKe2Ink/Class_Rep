@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,6 +40,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
     private List<Adhesion> adhesion = new ArrayList<>();
     private List<Integer> removedParent = new ArrayList<>();
     private List<Integer> removedChild = new ArrayList<>();
+    public HashMap<Integer, PersonViewHolder> holderHashMap = new HashMap<>();
     private Context context;
     private String type;
     private boolean singleOrAdd;
@@ -74,6 +76,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
     public List<Integer> getRemovedChild(){
         return removedChild;
     }
+    public boolean isAdhesionEmpty(){return adhesion.isEmpty();}
     public void clearList(){
         removedParent.clear();
         removedChild.clear();
@@ -103,6 +106,19 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
             return adhesion.size();
         }
         return people.size();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(PersonViewHolder holder) {
+        holderHashMap.put(holder.getLayoutPosition(),holder);
+        super.onViewDetachedFromWindow(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(PersonViewHolder holder) {
+        holderHashMap.remove(holder.getLayoutPosition());
+        super.onViewAttachedToWindow(holder);
+
     }
 
 

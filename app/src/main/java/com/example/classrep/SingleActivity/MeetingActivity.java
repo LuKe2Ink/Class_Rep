@@ -3,13 +3,6 @@ package com.example.classrep.SingleActivity;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -20,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -30,28 +24,33 @@ import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
-import com.example.classrep.SelectionActivity;
-import com.example.classrep.adder.AddMeetingActivity;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Meeting;
-import com.example.classrep.database.entity.PTAmeeting;
-import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.itextpdf.text.Document;
+
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -59,7 +58,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -110,6 +108,19 @@ public class MeetingActivity extends AppCompatActivity {
 
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         item = singleToneClass.getData("meeting");
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            ConstraintLayout background = findViewById(R.id.backgroundMeeting);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
 
         db = ClassRepDB.getDatabase(MeetingActivity.this);
         blurView = findViewById(R.id.blurViewMeeting);
@@ -377,7 +388,6 @@ public class MeetingActivity extends AppCompatActivity {
         // from our page of PDF.
         Canvas canvas = myPage.getCanvas();
 
-
         // below line is used to draw our image on our PDF file.
         // the first parameter of our drawbitmap method is
         // our bitmap
@@ -413,18 +423,20 @@ public class MeetingActivity extends AppCompatActivity {
         // below line is used for setting
         // our text to center of PDF.
         title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(meeting.getTitle(), 396, 300, title);
-
-        canvas.drawText(meeting.getType(), 396, 300, title);
-
-        canvas.drawText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(meeting.getDate()), 396, 300, title);
-
-        canvas.drawText(meeting.getPlace(), 396, 300, title);
-
-        canvas.drawText(meeting.getNote(), 396, 300, title);
 
         canvas.drawText(meeting.getTitle(), 396, 300, title);
-        title.set
+
+        canvas.drawText(meeting.getType(), 396, 330, title);
+
+        canvas.drawText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(meeting.getDate()), 396, 360, title);
+
+        canvas.drawText(meeting.getPlace(), 396, 390, title);
+
+        canvas.drawText(meeting.getNote(), 396, 420, title);
+
+        title.setTextAlign(Paint.Align.LEFT);
+
+        canvas.drawText(meeting.getReport(), 50, 480, title);
 
 
         // after adding all attributes to our

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/backgroundFund"
     android:background="@drawable/splashscreen"
     android:fitsSystemWindows="true"
     tools:context=".fragment.FundFragment">
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/fund_bar"
-                app:title="Fondo Cassa"
+                app:title=""
                 app:navigationIcon="@drawable/ic_baseline_menu_24" />
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -48,7 +49,6 @@
             android:id="@+id/drawerFund"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:headerLayout="@layout/headerlayout"
             android:layout_gravity="start"
             app:menu="@menu/drawer_menu">
 

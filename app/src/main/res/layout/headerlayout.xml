@@ -9,7 +9,7 @@
     tools:context=".SingleActivity.FundChronologyActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileIcon"
+        android:id="@+id/headerIcon"
         android:layout_width="84dp"
         android:layout_height="76dp"
         android:layout_marginTop="15dp"

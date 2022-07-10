@@ -1,15 +1,25 @@
 package com.example.classrep.adder;
 
+import static com.example.classrep.utilities.NotificationService.NOTIFICATION_CHANNEL_ID;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +32,7 @@ import android.widget.Switch;
 import android.widget.TimePicker;
 
 import com.example.classrep.HomeActivity;
+import com.example.classrep.MainActivity;
 import com.example.classrep.R;
 import com.example.classrep.adapter.PersonAdapter;
 import com.example.classrep.database.ClassRepDB;
@@ -31,11 +42,14 @@ import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.database.entity.Parent;
+import com.example.classrep.database.entity.Settings;
+import com.example.classrep.utilities.NotificationService;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -49,6 +63,7 @@ import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class AddPtaActivity extends AppCompatActivity {
+    private final static String default_notification_channel_id = "default" ;
 
 
     private PersonAdapter parentAdapter;
@@ -90,6 +105,20 @@ public class AddPtaActivity extends AppCompatActivity {
 
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         item = singleToneClass.getData("institute");
+
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            ConstraintLayout background = findViewById(R.id.backgroundAddPta);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
 
         recycleParent = findViewById(R.id.putParentAdd);
 
@@ -235,8 +264,8 @@ public class AddPtaActivity extends AppCompatActivity {
         //System.out.println(instatTaken);
         if(instatNow.isAfter(instatTaken)){
             new androidx.appcompat.app.AlertDialog.Builder(AddPtaActivity.this)
-                    .setTitle("La data inserita è prima di quella odierna")
-                    .setMessage("Vuoi comunque aggiungere l'evento?")
+                    .setTitle("La data inserita è prima o corrispondente a quella odierna")
+                    .setMessage("Vuoi comunque aggiungere il colloquio?")
                     //se clicca ok
                     .setPositiveButton("Si", (dialog, which)->{
                         addPta();
@@ -265,6 +294,11 @@ public class AddPtaActivity extends AppCompatActivity {
                 calendarioInizio.setTime(daterrima);
                 calendarioInizio.set(Calendar.HOUR, dataInizio.getHours());
                 calendarioInizio.set(Calendar.MINUTE, dataInizio.getMinutes());
+
+                Settings setting = db.ClassRepDAO().getSetting(item);
+                if(setting.isNotification()){
+                    scheduleNotification(getNotification() , Date.from(calendarioInizio.getTime().toInstant()).getTime()) ;
+                }
 
                 Calendar calendarioFine = Calendar.getInstance();
                 calendarioFine.setTime(daterrima);
@@ -306,6 +340,28 @@ public class AddPtaActivity extends AppCompatActivity {
             }
             callIntent();
         });
+    }
+
+    private void scheduleNotification (Notification notification , long delay) {
+        Intent notificationIntent = new Intent( this, NotificationService.class ) ;
+        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 0 ) ;
+        notificationIntent.putExtra(NotificationService.NOTIFICATION , notification) ;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast ( this, 0 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT ) ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(getBaseContext().ALARM_SERVICE ) ;
+        assert alarmManager != null;
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP , delay , pendingIntent);
+    }
+    private Notification getNotification () {
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText("Il colloquio con "+nome.getText().toString()+" "+cognome.getText().toString()+" sta per iniziare") ;
+        builder.setSmallIcon(R.drawable.logo) ;
+        builder.setAutoCancel( true ) ;
+        builder.setContentIntent(pendingIntent);
+        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 
     public void onBackPressed() {

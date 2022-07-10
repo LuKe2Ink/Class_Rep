@@ -35,6 +35,7 @@ import com.example.classrep.database.entity.Event;
 import com.example.classrep.database.entity.Institute;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
+import com.example.classrep.database.entity.Settings;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -176,6 +177,7 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                 }
             }
         });
+
         backgroundBlur();
         //Toast.makeText(getBaseContext(), String.valueOf(singleToneClass.getData("institute")), Toast.LENGTH_SHORT).show();
 
@@ -210,10 +212,14 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
 
             SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
             singleToneClass.setData("institute",item);
+            AsyncTask.execute(()->{
+                Settings setting = db.ClassRepDAO().getSetting(item);
+                singleToneClass.setImageBackground(setting.getImage());
 
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra("fragment", "calendar");
-            startActivity(intent);
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("fragment", "calendar");
+                startActivity(intent);
+            });
         }
     }
 
@@ -253,21 +259,5 @@ public class SelectionActivity extends AppCompatActivity implements InstituteAda
                 .setBlurRadius(radius)
                 .setHasFixedTransformationMatrix(true);
     }
-
-
-//    Intent intent
-//            = new Intent(Intent.ACTION_SEND);
-//
-//                    intent.setType("text/plain");
-//                    intent.setPackage("com.whatsapp");
-//
-//    // Give your message here
-//                    intent.putExtra(Intent.EXTRA_TEXT, "");
-//    startActivity(intent);
-    //PER LA CREAZIONE DEL PDF
-    //POTREI FARE CHE ACCETTA COME INGRESSO UNA MAPPA CON CHIAVI E VALORI
-    //TITOLO, NOTE(?), DATA, RAPPORTO
-
-
 
 }

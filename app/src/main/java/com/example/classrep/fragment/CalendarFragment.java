@@ -1,29 +1,44 @@
 package com.example.classrep.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import com.example.classrep.ProfileActivity;
 import com.example.classrep.R;
+import com.example.classrep.SelectionActivity;
+import com.example.classrep.SettingsActivity;
 import com.example.classrep.SingleActivity.PtaActivity;
 import com.example.classrep.adapter.EventAdapter;
 import com.example.classrep.adapter.MeetingAdapter;
 import com.example.classrep.adapter.PtaAdapter;
 import com.example.classrep.database.ClassRepDB;
 import com.example.classrep.database.entity.Event;
+import com.example.classrep.database.entity.Institute;
 import com.example.classrep.database.entity.Meeting;
 import com.example.classrep.database.entity.PTAmeeting;
 import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,6 +47,7 @@ import org.naishadhparmar.zcustomcalendar.OnDateSelectedListener;
 import org.naishadhparmar.zcustomcalendar.OnNavigationButtonClickedListener;
 import org.naishadhparmar.zcustomcalendar.Property;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -60,7 +77,11 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
     private RecyclerView eventRecycle;
     private RecyclerView meetingRecycle;
     private RecyclerView ptaRecycle;
+    private MaterialToolbar topAppBar;
     private SingleToneClass singleToneClass;
+
+    private DrawerLayout drawerLayout;
+    private NavigationView drawer;
 
 
     private View view;
@@ -76,9 +97,66 @@ public class CalendarFragment extends Fragment implements OnNavigationButtonClic
         db = ClassRepDB.getDatabase(getContext());
         singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
 
+        drawerLayout = view.findViewById(R.id.drawerLayoutCalendar);
+        drawer = view.findViewById(R.id.drawerCalendar);
+        drawer.bringToFront();
+
+        AsyncTask.execute(()->{
+            String image = db.ClassRepDAO().getInstitute(singleToneClass.getData("institute")).getImage();
+            if(!image.contains("nada")){
+                Uri uri = Uri.parse(image);
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+                CircleImageView immagine = hView.findViewById(R.id.headerIcon);
+                immagine.setImageURI(uri);
+            } else {
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+            }
+        });
+
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            FrameLayout background = view.findViewById(R.id.backgroundCalendar);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( this.getActivity().getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
+
         eventRecycle = view.findViewById(R.id.recyclerCalendarEvent);
         meetingRecycle = view.findViewById(R.id.recyclerCalendarMeeting);
         ptaRecycle = view.findViewById(R.id.recyclerCalendarPta);
+
+        topAppBar = view.findViewById(R.id.topAppBarHome);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this.getActivity(), drawerLayout, topAppBar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        drawer.setNavigationItemSelectedListener(menuItem->{
+            int id = menuItem.getItemId();
+
+            switch(id){
+                case R.id.profile:
+                    Intent intent1 = new Intent(getContext(), SettingsActivity.class);
+                    startActivity(intent1);
+                    break;
+                case R.id.settings:
+                    Intent intent2 = new Intent(getContext(), ProfileActivity.class);
+                    startActivity(intent2);
+                    break;
+                case R.id.logOut:
+                    Intent intent3 = new Intent(getContext(), SelectionActivity.class);
+                    startActivity(intent3);
+                    break;
+            }
+
+            return true;
+        });
 
         customCalendar=view.findViewById(R.id.custom_calendar);
 

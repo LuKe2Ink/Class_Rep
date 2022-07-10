@@ -1,7 +1,11 @@
 package com.example.classrep.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +13,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,9 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.classrep.ProfileActivity;
 import com.example.classrep.R;
+import com.example.classrep.SelectionActivity;
+import com.example.classrep.SettingsActivity;
 import com.example.classrep.SingleActivity.EventActivity;
 import com.example.classrep.SingleActivity.PtaActivity;
 import com.example.classrep.adapter.EventAdapter;
@@ -34,14 +45,17 @@ import com.example.classrep.database.entity.Parent;
 import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -65,6 +79,9 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
     private FloatingActionButton add;
     private BlurView blurView;
 
+    private DrawerLayout drawerLayout;
+    private NavigationView drawer;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -74,9 +91,66 @@ public class EventFragment extends Fragment implements EventAdapter.onEventListe
         singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
 
         view = inflater.inflate(R.layout.fragments_home, container, false);
+
+        drawerLayout = view.findViewById(R.id.drawerLayoutHome);
+        drawer = view.findViewById(R.id.drawerHome);
+        drawer.bringToFront();
+
+        AsyncTask.execute(()->{
+            String image = db.ClassRepDAO().getInstitute(singleToneClass.getData("institute")).getImage();
+            if(!image.contains("nada")){
+                Uri uri = Uri.parse(image);
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+                CircleImageView immagine = hView.findViewById(R.id.headerIcon);
+                immagine.setImageURI(uri);
+            } else {
+                View hView =  drawer.inflateHeaderView(R.layout.headerlayout);
+            }
+        });
+
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            FrameLayout background = view.findViewById(R.id.backgroundHome);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( this.getActivity().getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
+
+
         recycle = view.findViewById(R.id.recyclerViewHome);
         topAppbar = view.findViewById(R.id.topAppBarHome);
         add = view.findViewById(R.id.addHome);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this.getActivity(), drawerLayout, topAppbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        drawer.setNavigationItemSelectedListener(menuItem->{
+            int id = menuItem.getItemId();
+
+            switch(id){
+                case R.id.profile:
+                    Intent intent1 = new Intent(getContext(), SettingsActivity.class);
+                    startActivity(intent1);
+                    break;
+                case R.id.settings:
+                    Intent intent2 = new Intent(getContext(), ProfileActivity.class);
+                    startActivity(intent2);
+                    break;
+                case R.id.logOut:
+                    Intent intent3 = new Intent(getContext(), SelectionActivity.class);
+                    startActivity(intent3);
+                    break;
+            }
+
+            return true;
+        });
 
         blurView = view.findViewById(R.id.blurViewFragment);
         backgroundBlur();

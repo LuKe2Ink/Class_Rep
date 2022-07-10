@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class SingleToneClass {
     private static  Map<String, Integer> s;
+    private static String image;
     private static final SingleToneClass ourInstance = new SingleToneClass();
 
     public static SingleToneClass getInstance() {
@@ -38,6 +39,14 @@ public class SingleToneClass {
             return 1234567890;
         }
     }
+
+    public String getImageBackground(){
+        return image;
+    }
+    public void setImageBackground(String img){
+        this.image = img;
+    }
+
 
     public void deleteData(String key){
         this.s.remove(key);

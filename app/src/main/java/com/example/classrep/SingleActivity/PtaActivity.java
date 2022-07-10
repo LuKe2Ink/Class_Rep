@@ -9,7 +9,11 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +42,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -118,6 +123,19 @@ public class PtaActivity extends AppCompatActivity {
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         idInstitute = singleToneClass.getData("institute");
         idEvent = singleToneClass.getData("pta");
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            ConstraintLayout background = findViewById(R.id.backgroundPta);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
 
         String jsPta = intent.getStringExtra("pta");
         //System.out.println(jsPta);
@@ -127,10 +145,13 @@ public class PtaActivity extends AppCompatActivity {
 
         addButton.setOnClickListener( view ->{
             for(int i= 0; i<parents.size(); i++){
-                View view1 = recycleParent.getChildAt(i);
-                EditText nomeGenitore = view1.findViewById(R.id.nome);
-                EditText cognomeGenitore = view1.findViewById(R.id.cognome);
-                EditText orarioGenitore = view1.findViewById(R.id.time);
+                RecyclerView.ViewHolder view1 = recycleParent.findViewHolderForLayoutPosition(i);
+                if(view1 == null){
+                    view1 = adapter.holderHashMap.get(i);
+                }
+                EditText nomeGenitore = view1.itemView.findViewById(R.id.nome);
+                EditText cognomeGenitore = view1.itemView.findViewById(R.id.cognome);
+                EditText orarioGenitore = view1.itemView.findViewById(R.id.time);
                 parents.get(i).setName(nomeGenitore.getText().toString());
                 parents.get(i).setSurname(cognomeGenitore.getText().toString());
                 String stringa = orarioGenitore.getText().toString();
@@ -145,6 +166,7 @@ public class PtaActivity extends AppCompatActivity {
                 }
             }
             parents.add(new  Parent(maxidParent, 0, pta.getId_pta(), "", "", Date.from(Calendar.getInstance().toInstant())));
+            maxidParent++;
             adapter.notifyDataSetChanged();
         });
 
@@ -225,19 +247,23 @@ public class PtaActivity extends AppCompatActivity {
                     MenuItem send = toolbar.getMenu().findItem(R.id.send);
                     send.setVisible(false);
                     for (int i=0; i<parents.size(); i++){
-                        View view = recycleParent.getChildAt(i);
-                        EditText nome = view.findViewById(R.id.nome);
-                        nome.setFocusable(true);
-                        EditText cognome = view.findViewById(R.id.cognome);
-                        cognome.setFocusable(true);
-                        EditText orario = view.findViewById(R.id.time);
-                        orario.setFocusable(true);
-                        Button delete = view.findViewById(R.id.trashPerson);
+                        adapter.addParents(parents);
+                        RecyclerView.ViewHolder view = recycleParent.findViewHolderForLayoutPosition(i);
+                        if(view == null){
+                            view = adapter.holderHashMap.get(i);
+                            System.out.println(view);
+                        }
+                        EditText nome = view.itemView.findViewById(R.id.nome);
+                        nome.setEnabled(true);
+                        EditText cognome = view.itemView.findViewById(R.id.cognome);
+                        cognome.setEnabled(true);
+                        EditText orario = view.itemView.findViewById(R.id.time);
+                        orario.setEnabled(true);
+                        Button delete = view.itemView.findViewById(R.id.trashPerson);
                         delete.setVisibility(View.VISIBLE);
                     }
                     modify = true;
                     modifyEnable(modify);
-                    adapter.notifyDataSetChanged();
                     addButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.cancel:
@@ -251,6 +277,21 @@ public class PtaActivity extends AppCompatActivity {
                     MenuItem send1 = toolbar.getMenu().findItem(R.id.send);
                     send1.setVisible(true);
 
+                    for (int i=0; i<parents.size(); i++){
+                        RecyclerView.ViewHolder view = recycleParent.findViewHolderForLayoutPosition(i);
+                        if(view == null){
+                            view = adapter.holderHashMap.get(i);
+                            System.out.println(view);
+                        }
+                        EditText nome = view.itemView.findViewById(R.id.nome);
+                        nome.setEnabled(false);
+                        EditText cognome = view.itemView.findViewById(R.id.cognome);
+                        cognome.setEnabled(false);
+                        EditText orario = view.itemView.findViewById(R.id.time);
+                        orario.setEnabled(false);
+                        Button delete = view.itemView.findViewById(R.id.trashPerson);
+                        delete.setVisibility(View.GONE);
+                    }
                     addButton.setVisibility(View.GONE);
                     nome.setEnabled(false);
                     cognome.setEnabled(false);
@@ -260,6 +301,9 @@ public class PtaActivity extends AppCompatActivity {
                     materie.setEnabled(false);
                     break;
                 case R.id.confirmEdit:
+                    System.out.println(recycleParent.getChildCount());
+
+                    System.out.println(parents.size());
 
                     menuItem.setVisible(false);
                     MenuItem cancel2 = toolbar.getMenu().findItem(R.id.cancel);
@@ -270,10 +314,12 @@ public class PtaActivity extends AppCompatActivity {
                     send2.setVisible(true);
                     modify = false;
                     modifyEnable(modify);
+                    //update valori
 
                     AsyncTask.execute(()->{
-                        System.out.println(isAllOk());
+                        System.out.println("genitori su recycle:" + recycleParent.getChildCount());
                         if(isAllOk()){
+                            System.out.println("genitori su recycle:" + recycleParent.getChildCount());
                             List<Integer> idGenitori = adapter.getRemovedParent();
                             db.ClassRepDAO().deleteParents(idGenitori);
                             adapter.clearList();
@@ -288,16 +334,23 @@ public class PtaActivity extends AppCompatActivity {
                                 db.ClassRepDAO().updatePtaMeeting(pta);
                             }
 
+
+                            System.out.println(parents.size());
                             for (int i=0; i<parents.size(); i++){
-                                if(!db.ClassRepDAO().getSingleParent(parents.get(i).getId_parent()).isEmpty()){
-                                    View view = recycleParent.getChildAt(i);
-                                    EditText nomeGenitore = view.findViewById(R.id.nome);
-                                    EditText cognomeGenitore = view.findViewById(R.id.cognome);
-                                    EditText orarioGenitore = view.findViewById(R.id.time);
+                                List<Parent> trovato = db.ClassRepDAO().getSingleParent(parents.get(i).getId_parent());
+                                if(!trovato.isEmpty()){
+                                    RecyclerView.ViewHolder view = recycleParent.findViewHolderForLayoutPosition(i);
+                                    if(view == null){
+                                        view = adapter.holderHashMap.get(i);
+                                    }
+                                    EditText nomeGenitore = view.itemView.findViewById(R.id.nome);
+                                    EditText cognomeGenitore = view.itemView.findViewById(R.id.cognome);
+                                    EditText orarioGenitore = view.itemView.findViewById(R.id.time);
+                                    System.out.println(parents.get(i).getName() + " " +nomeGenitore.getText().toString());
                                     try {
-                                        if(parents.get(i).getName() != nomeGenitore.getText().toString()
-                                                || parents.get(i).getSurname() != cognomeGenitore.getText().toString()
-                                                || parents.get(i).getTime().equals(new SimpleDateFormat("HH:mm").parse(orarioGenitore.getText().toString())))
+                                        if(!parents.get(i).getName().contains(nomeGenitore.getText().toString())
+                                                || !parents.get(i).getSurname().contains(cognomeGenitore.getText().toString())
+                                                || !parents.get(i).getTime().equals(new SimpleDateFormat("HH:mm").parse(orarioGenitore.getText().toString())))
                                         {
                                             parents.get(i).setName(nomeGenitore.getText().toString());
                                             parents.get(i).setSurname(cognomeGenitore.getText().toString());
@@ -308,10 +361,14 @@ public class PtaActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    View view = recycleParent.getChildAt(i);
-                                    EditText nomeGenitore = view.findViewById(R.id.nome);
-                                    EditText cognomeGenitore = view.findViewById(R.id.cognome);
-                                    EditText orarioGenitore = view.findViewById(R.id.time);
+                                    RecyclerView.ViewHolder view = recycleParent.findViewHolderForLayoutPosition(i);
+                                    if(view == null){
+                                        view = adapter.holderHashMap.get(i);
+                                        System.out.println(view);
+                                    }
+                                    EditText nomeGenitore = view.itemView.findViewById(R.id.nome);
+                                    EditText cognomeGenitore = view.itemView.findViewById(R.id.cognome);
+                                    EditText orarioGenitore = view.itemView.findViewById(R.id.time);
 
                                     if(!nomeGenitore.getText().toString().isEmpty() || !cognomeGenitore.getText().toString().isEmpty()){
                                         String ora = orarioGenitore.getText().toString();
@@ -320,7 +377,7 @@ public class PtaActivity extends AppCompatActivity {
                                         }
 
                                         try {
-                                            Parent parente = new Parent(maxidParent, 0, pta.getId_pta(),
+                                            Parent parente = new Parent(parents.get(i).getId_parent(), 0, pta.getId_pta(),
                                                     nomeGenitore.getText().toString(), cognomeGenitore.getText().toString(),
                                                     new SimpleDateFormat("HH:mm").parse(ora));
                                             db.ClassRepDAO().insertParent(parente);
@@ -334,19 +391,23 @@ public class PtaActivity extends AppCompatActivity {
                         }
                         this.runOnUiThread(()->{
                             for (int l =0; l<parents.size(); l++){
-                                View view1 = recycleParent.getChildAt(l);
-                                EditText nome = view1.findViewById(R.id.nome);
-                                nome.setFocusable(false);
-                                EditText cognome = view1.findViewById(R.id.cognome);
-                                cognome.setFocusable(false);
-                                EditText orario = view1.findViewById(R.id.time);
-                                orario.setFocusable(false);
-                                Button delete = view1.findViewById(R.id.trashPerson);
+                                RecyclerView.ViewHolder view1 = recycleParent.findViewHolderForLayoutPosition(l);
+                                if(view1 == null){
+                                    view1 = adapter.holderHashMap.get(l);
+                                    System.out.println(view1);
+                                }
+                                EditText nome = view1.itemView.findViewById(R.id.nome);
+                                nome.setEnabled(false);
+                                EditText cognome = view1.itemView.findViewById(R.id.cognome);
+                                cognome.setEnabled(false);
+                                EditText orario = view1.itemView.findViewById(R.id.time);
+                                orario.setEnabled(false);
+                                Button delete = view1.itemView.findViewById(R.id.trashPerson);
                                 delete.setVisibility(View.GONE);
                             }
                             adapter.notifyDataSetChanged();
+                            setAll();
                         });
-                        this.runOnUiThread(()->{setAll();});
                     });
                     break;
             }

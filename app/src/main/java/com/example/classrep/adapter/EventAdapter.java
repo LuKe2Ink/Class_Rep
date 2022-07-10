@@ -80,16 +80,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             itemView.setOnClickListener(this);
         }
 
-        public void bindEvent(Event meeting, int parents, int children) {
-            title.setText(meeting.getTitle());
+        public void bindEvent(Event event, int parents, int children) {
+            title.setText(event.getTitle());
             Calendar cal = Calendar.getInstance();
-            cal.setTime(meeting.getDate());
+            cal.setTime(event.getDate());
             date.setText(format1.format(cal.getTime()));
-            place.setText(meeting.getPlace());
+            place.setText(event.getPlace());
             textParents.setVisibility(View.VISIBLE);
             textChildren.setVisibility(View.VISIBLE);
             textParents.setText("Genitori: "+String.valueOf(parents));
-            textChildren.setText("Bambini: "+String.valueOf(children));
+            if(event.isChildren()){
+                textChildren.setText("Bambini: "+String.valueOf(children));
+            } else {
+                textChildren.setText("Bambini: 0");
+            }
 
             note.setVisibility(View.INVISIBLE);
         }

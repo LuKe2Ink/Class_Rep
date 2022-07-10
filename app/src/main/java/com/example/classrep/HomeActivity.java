@@ -38,24 +38,29 @@ public class HomeActivity extends AppCompatActivity {
         db = ClassRepDB.getDatabase(getBaseContext());
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         institute_id = singleToneClass.getData("institute");
+        bottomNavigationMenuView = findViewById(R.id.bottom_navigation);
 
         Intent intent = getIntent();
 
         if(intent.getStringExtra("fragment").contains("calendar")){
             callCalendarFragment();
+            bottomNavigationMenuView.setSelectedItemId(R.id.calendar);
         } else if(intent.getStringExtra("fragment").contains("fund")){Bundle bundle= new Bundle();
             callFundFragment();
+            bottomNavigationMenuView.setSelectedItemId(R.id.fund);
         } else if(intent.getStringExtra("fragment").contains("pta")){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new PTAFragment()).commit();
+            bottomNavigationMenuView.setSelectedItemId(R.id.pta);
         } else if(intent.getStringExtra("fragment").contains("meeting")){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new MeetingFragment()).commit();
+            bottomNavigationMenuView.setSelectedItemId(R.id.meeting);
         } else if(intent.getStringExtra("fragment").contains("event")){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_menu, new EventFragment()).commit();
+            bottomNavigationMenuView.setSelectedItemId(R.id.event);
         }
 
 
-        bottomNavigationMenuView = findViewById(R.id.bottom_navigation);
-        bottomNavigationMenuView.setSelectedItemId(R.id.calendar);
+
         bottomNavigationMenuView.setOnItemSelectedListener(item -> {
             item.setChecked(true);
                 switch(item.getItemId()){

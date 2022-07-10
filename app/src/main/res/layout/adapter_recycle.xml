@@ -31,6 +31,7 @@
             android:id="@+id/note"
             android:layout_width="match_parent"
             android:layout_height="56sp"
+            android:textAlignment="center"
             android:layout_marginHorizontal="50sp"
             android:text="Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note Note"
             app:layout_constraintBottom_toBottomOf="@+id/view"

@@ -1,12 +1,19 @@
 package com.example.classrep.SingleActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.classrep.HomeActivity;
 import com.example.classrep.R;
@@ -21,8 +28,12 @@ import com.example.classrep.utilities.SingleToneClass;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.gson.Gson;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class FundChronologyActivity extends AppCompatActivity {
 
@@ -35,14 +46,31 @@ public class FundChronologyActivity extends AppCompatActivity {
     private FundChronologyAdapter adapter;
     private ClassRepDB db;
     int item;
+    private BlurView blurView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fund_chronology);
 
+        blurView = findViewById(R.id.blurViewFundChron);
+        backgroundBlur();
+
         SingleToneClass singleToneClass = com.example.classrep.utilities.SingleToneClass.getInstance();
         item = singleToneClass.getData("institute");
+        if(!singleToneClass.getImageBackground().contains("nada")){
+            ConstraintLayout background = findViewById(R.id.backgroundEventFundChron);
+
+            Uri uri = Uri.parse(singleToneClass.getImageBackground());
+            Bitmap bmImg = null;
+            try {
+                bmImg = BitmapFactory.decodeStream( getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BitmapDrawable background1 = new BitmapDrawable(bmImg);
+            background.setBackground(background1);
+        }
 
         db = ClassRepDB.getDatabase(this);
 
@@ -91,5 +119,22 @@ public class FundChronologyActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("fragment", "fund");
         startActivity(intent);
+    }
+    public void backgroundBlur(){
+        float radius = 5f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setHasFixedTransformationMatrix(true);
     }
 }

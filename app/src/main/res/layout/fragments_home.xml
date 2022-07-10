@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/backgroundHome"
     android:background="@drawable/splashscreen"
     tools:context=".fragment.MeetingFragment">
 
@@ -36,9 +37,25 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/selection_appbar"
-            app:title="" />
+            app:title=""
+            app:navigationIcon="@drawable/ic_baseline_menu_24"/>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayoutHome"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/drawerHome"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/drawer_menu">
+
+        </com.google.android.material.navigation.NavigationView>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -56,6 +73,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
             app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/adapter_recycle" />
+        </androidx.drawerlayout.widget.DrawerLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addHome"
